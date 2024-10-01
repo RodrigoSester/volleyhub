@@ -3,14 +3,19 @@ import App from './App.vue'
 import router from './router';
 
 import { 
+  // Core components
   IonicVue, 
   IonPage,
-  IonLabel,
+  IonApp,
   IonContent,
   IonIcon,
-  IonApp,
   IonSearchbar,
-
+  IonHeader,
+  IonToolbar,
+  IonFooter,
+  IonTitle,
+  IonBackButton,
+  
   // Item components
   IonItem,
   IonItemDivider,
@@ -20,13 +25,7 @@ import {
   IonItemSliding,
   IonList,
   IonListHeader,
-
-  // Layout components
-  IonHeader,
-  IonToolbar,
-  IonFooter,
-  IonTitle,
-  IonBackButton,
+  IonLabel,
 
   // Tabs components
   IonTab,

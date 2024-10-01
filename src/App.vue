@@ -1,50 +1,17 @@
 <template>
   <ion-app>
-    <ion-router-outlet>
-      <index-page></index-page>
-    </ion-router-outlet>
+    <ion-router-outlet></ion-router-outlet>
   </ion-app>
 </template>
 
 <script>
 import { defineComponent } from 'vue';
 
-import IndexPage from './views/IndexPage.vue';
-
 export default defineComponent({
   name: 'App',
   components: {
-    IndexPage,
   },
 });
-
-// const selectedIndex = ref(0);
-// const appPages = [
-//   {
-//     title: 'Home',
-//     url: '/home',
-//     iosIcon: mailOutline,
-//     mdIcon: mailSharp,
-//   },
-//   {
-//     title: 'Time',
-//     url: '/src/views/TeamsPage.vue',
-//     iosIcon: paperPlaneOutline,
-//     mdIcon: paperPlaneSharp,
-//   },
-//   {
-//     title: 'Calendário de jogos',
-//     url: '/src/views/CalendarPage.vue',
-//     iosIcon: heartOutline,
-//     mdIcon: heartSharp,
-//   },
-//   {
-//     title: 'Perfil',
-//     url: '/src/views/ProfilePage.vue',
-//     iosIcon: archiveOutline,
-//     mdIcon: archiveSharp,
-//   },
-// ];
 </script>
 
 <style scoped>
