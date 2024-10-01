@@ -1,31 +1,62 @@
 <template>
   <ion-page>
-    <ion-header :translucent="true">
-      <ion-toolbar>
-        <ion-buttons slot="start">
-          <ion-menu-button color="primary"></ion-menu-button>
-        </ion-buttons>
-        <ion-title>{{ $route.params.id }}</ion-title>
-      </ion-toolbar>
-    </ion-header>
-
     <ion-content :fullscreen="true">
-      <ion-header collapse="condense">
-        <ion-toolbar>
-          <ion-title size="large">{{ $route.params.id }}</ion-title>
-        </ion-toolbar>
-      </ion-header>
-
-      <div id="container">
-        <strong class="capitalize">{{ $route.params.id }}</strong>
-        <p>Explore <a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a></p>
-      </div>
+      <ion-grid>
+        <ion-row>
+          <ion-col size="12">
+            <ion-label>
+              Email
+            </ion-label>
+            <ion-input
+              type="email"
+              placeholder="example@email.com"
+              fill="outline"
+              required
+            />
+          </ion-col>
+          <ion-col size="12">
+            <ion-label>
+              Password
+            </ion-label>
+            <ion-input
+              type="password"
+              fill="outline"
+              required
+            />
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col size="12">
+            <ion-button
+              expand="block"
+              fill="solid"
+              color="primary"
+              routerLink="/home"
+            >
+              Login
+            </ion-button>
+            <ion-button
+              expand="block"
+              fill="outline"
+              color="secondary"
+              routerLink="/register"
+            >
+              <ion-label>
+                Criar Conta
+              </ion-label>
+            </ion-button>
+            <ion-label>
+              <a href="/src/views/FolderPage.vue">Esqueceu a senha?</a>
+            </ion-label>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
     </ion-content>
   </ion-page>
 </template>
 
 <script setup>
-import { IonButtons, IonContent, IonHeader, IonMenuButton, IonPage, IonTitle, IonToolbar } from '@ionic/vue';
+
 </script>
 
 <style scoped>

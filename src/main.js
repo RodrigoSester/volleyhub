@@ -2,7 +2,23 @@ import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router';
 
-import { IonicVue } from '@ionic/vue';
+import { 
+  IonicVue, 
+  IonPage,
+  IonTitle,
+  IonButtons,
+  IonInput,
+  IonInputPasswordToggle,
+  IonLabel,
+  IonList,
+  IonContent,
+  IonButton,
+
+  // Grid components
+  IonRow,
+  IonCol,
+  IonGrid,
+} from '@ionic/vue';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/vue/css/core.css';
@@ -37,6 +53,21 @@ import './theme/variables.css';
 const app = createApp(App)
   .use(IonicVue)
   .use(router);
+
+app.component('IonPage', IonPage);
+app.component('IonTitle', IonTitle);
+app.component('IonButtons', IonButtons);
+app.component('IonInput', IonInput);
+app.component('IonInputPasswordToggle', IonInputPasswordToggle);
+app.component('IonLabel', IonLabel);
+app.component('IonList', IonList);
+app.component('IonContent', IonContent);
+app.component('IonButton', IonButton);
+
+// Grid components
+app.component('IonRow', IonRow);
+app.component('IonCol', IonCol);
+app.component('IonGrid', IonGrid);
 
 router.isReady().then(() => {
   app.mount('#app');
