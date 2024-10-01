@@ -2,7 +2,7 @@
   <ion-page>
     <ion-header>
       <ion-toolbar>
-        <ion-title>Home</ion-title>
+        <ion-title>Team's Page</ion-title>
       </ion-toolbar>
     </ion-header>
     <ion-content>
