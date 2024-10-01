@@ -118,11 +118,6 @@ Object.entries(components).forEach(([name, component]) => {
   app.component(name, component);
 });
 
-// Grid components
-app.component('IonRow', IonRow);
-app.component('IonCol', IonCol);
-app.component('IonGrid', IonGrid);
-
 router.isReady().then(() => {
   app.mount('#app');
 });
