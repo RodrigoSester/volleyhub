@@ -2,16 +2,34 @@ import { createRouter, createWebHistory } from '@ionic/vue-router';
 
 const routes = [
   {
-    path: '',
-    redirect: '/folder/Inbox'
-  },
-  {
-    path: '/folder/:id',
-    component: () => import ('../views/FolderPage.vue')
+    path: '/',
+    component: () => import ('../views/IndexPage.vue'),
+    children: [
+      {
+        path: '/home',
+        component: () => import ('../views/HomePage.vue'),
+      },
+      {
+        path: '/teams',
+        component: () => import ('../views/TeamsPage.vue'),
+      },
+      {
+        path: '/games',
+        component: () => import ('../views/GamesPage.vue'),
+      },
+      {
+        path: '/profile',
+        component: () => import ('../views/ProfilePage.vue')
+      },
+    ]
   },
   {
     path: '/login',
     component: () => import ('../views/LoginPage.vue')
+  },
+  {
+    path: '/register',
+    component: () => import ('../views/RegisterPage.vue')
   }
 ]
 

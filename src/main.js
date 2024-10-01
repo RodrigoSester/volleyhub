@@ -5,15 +5,42 @@ import router from './router';
 import { 
   IonicVue, 
   IonPage,
+  IonLabel,
+  IonContent,
+  IonIcon,
+  IonApp,
+  IonSearchbar,
+
+  // Item components
+  IonItem,
+  IonItemDivider,
+  IonItemGroup,
+  IonItemOption,
+  IonItemOptions,
+  IonItemSliding,
+  IonList,
+  IonListHeader,
+
+  // Layout components
+  IonHeader,
+  IonToolbar,
+  IonFooter,
   IonTitle,
+  IonBackButton,
+
+  // Tabs components
+  IonTab,
+  IonTabs,
+  IonTabBar,
+  IonTabButton,
+  IonRouterOutlet,
+  
+  // Form components
   IonButtons,
+  IonButton,
   IonInput,
   IonInputPasswordToggle,
-  IonLabel,
-  IonList,
-  IonContent,
-  IonButton,
-
+  
   // Grid components
   IonRow,
   IonCol,
@@ -54,15 +81,43 @@ const app = createApp(App)
   .use(IonicVue)
   .use(router);
 
-app.component('IonPage', IonPage);
-app.component('IonTitle', IonTitle);
-app.component('IonButtons', IonButtons);
-app.component('IonInput', IonInput);
-app.component('IonInputPasswordToggle', IonInputPasswordToggle);
-app.component('IonLabel', IonLabel);
-app.component('IonList', IonList);
-app.component('IonContent', IonContent);
-app.component('IonButton', IonButton);
+const components = {
+  IonPage,
+  IonTitle,
+  IonButtons,
+  IonInput,
+  IonInputPasswordToggle,
+  IonLabel,
+  IonList,
+  IonContent,
+  IonButton,
+  IonRow,
+  IonCol,
+  IonGrid,
+  IonHeader,
+  IonToolbar,
+  IonFooter,
+  IonBackButton,
+  IonTabs,
+  IonTab,
+  IonTabBar,
+  IonTabButton,
+  IonRouterOutlet,
+  IonApp,
+  IonIcon,
+  IonItem,
+  IonItemDivider,
+  IonItemGroup,
+  IonItemOption,
+  IonItemOptions,
+  IonItemSliding,
+  IonListHeader,
+  IonSearchbar,
+};
+
+Object.entries(components).forEach(([name, component]) => {
+  app.component(name, component);
+});
 
 // Grid components
 app.component('IonRow', IonRow);
