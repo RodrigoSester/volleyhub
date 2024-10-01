@@ -19,7 +19,7 @@
             :tab="page.title"
             :href="page.path"
           >
-            <ion-icon :name="page.icon" />
+            <ion-icon :icon="page.icon" color="primary" />
             <ion-label>{{ page.title }}</ion-label>
           </ion-tab-button>
         </ion-tab-bar>
@@ -31,6 +31,12 @@
 <script>
 import { defineComponent } from 'vue';
 import { useRoute } from 'vue-router';
+import {
+  home,
+  people,
+  calendarOutline,
+  personCircleOutline
+} from 'ionicons/icons';
 
 export default defineComponent({
   name: 'IndexPage',
@@ -56,25 +62,25 @@ export default defineComponent({
           id: 'home',
           title: 'Home',
           path: '/home',
-          icon: 'home'
+          icon: home
         },
         {
           id: 'team',
           title: 'Team',
           path: '/team',
-          icon: 'people'
+          icon: people
         },
         {
           id: 'matches',
           title: 'Matches',
           path: '/matches',
-          icon: 'football'
+          icon: calendarOutline
         },
         {
           id: 'profile',
           title: 'Profile',
           path: '/profile',
-          icon: 'person'
+          icon: personCircleOutline
         },
       ]
     }
