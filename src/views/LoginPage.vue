@@ -18,7 +18,7 @@
                 fill="outline"
                 error-text="Invalid email"
                 required
-                @ionInput="validateEmail($event.target.value)"
+                @input="validateEmail($event.target.value)"
               />
             </ion-col>
             <ion-col size="12">
@@ -30,6 +30,7 @@
                 type="password"
                 fill="outline"
                 required
+                @input="password = $event.target.value"
               />
             </ion-col>
             <ion-col size="12">
@@ -62,31 +63,40 @@
 <script>
 
 import { defineComponent } from 'vue';
-import { axiosInstance } from '../config/axios.config';
+import { axiosInstance, setToken } from '../config/axios.config';
+import { showToast } from '../helper/toast.helper';
 
 export default defineComponent({
   name: 'LoginPage',
+  data() {
+    return {
+      email: '',
+      password: '',
+    };
+  },
   methods: {
     validateEmail(email) {
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!emailRegex.test(email)) {
         console.log('Invalid email');
       }
+
+      this.email = email;
     },
     async login() {
-      console.log('Login');
 
       try {
         const body = {
-          email: 'email',
-          password: 'password',
+          email: this.email,
+          password: this.password,
         };
 
-        const response = await axiosInstance.post('/login', body);
+        const response = await axiosInstance.post('/auth/login', body);
 
-        console.log(response.data);
+        setToken(response.data.token);
       } catch (error) {
         console.error(error);
+        showToast('Erro ao fazer login');
       }
     },
   }
