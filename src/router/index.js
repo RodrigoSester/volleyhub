@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from '@ionic/vue-router';
 
 const routes = [
   {
+    meta: { auth: true },
     path: '/',
     component: () => import ('../views/IndexPage.vue'),
     children: [
