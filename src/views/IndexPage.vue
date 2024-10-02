@@ -1,11 +1,5 @@
 <template>
   <ion-page>
-    <ion-header>
-      <ion-toolbar>
-        <ion-title>{{ currentPageTitle }}</ion-title>
-      </ion-toolbar>
-    </ion-header>
-
     <ion-content>
       <ion-router-outlet />
     </ion-content>
@@ -18,6 +12,7 @@
             :key="page.id"
             :tab="page.title"
             :href="page.path"
+            @click="goToPage(page.path)"
           >
             <ion-icon :icon="page.icon" color="primary" />
             <ion-label>{{ page.title }}</ion-label>
@@ -48,7 +43,7 @@ export default defineComponent({
   computed: {
     currentPageTitle() {
       const route = useRoute();
-      const currentPage = this.appPages.find(page => page.path === route.path);
+      const currentPage = this.appPages.find(page => page.path === route?.path);
       return currentPage ? currentPage.title : 'App';
     }
   },
@@ -67,7 +62,7 @@ export default defineComponent({
         {
           id: 'team',
           title: 'Team',
-          path: '/team',
+          path: '/teams',
           icon: people
         },
         {
@@ -83,6 +78,10 @@ export default defineComponent({
           icon: personCircleOutline
         },
       ]
+    },
+    goToPage(path) {
+      console.log("🚀 ~ goToPage ~ path:", path)
+      this.$router.push(path);
     }
   }
 });
