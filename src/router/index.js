@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from '@ionic/vue-router';
+import { isAuthenticated } from '../config/axios.config';
 
 const routes = [
   {
@@ -40,9 +41,9 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  const isAuthenticated = false;
+  const authenticated = isAuthenticated();
 
-  if (to.matched.some(record => record.meta.auth) && !isAuthenticated) {
+  if (to.matched.some(record => record.meta.auth) && !authenticated) {
     next('/login');
   } else {
     next();
