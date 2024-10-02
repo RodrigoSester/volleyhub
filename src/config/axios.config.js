@@ -1,8 +1,8 @@
 import axios from "axios";
 
 export const axiosInstance = axios.create({
-  baseURL: "https://volleyhub-api.onrender.com",
-  timeout: 1000,
+  baseURL: "https://volleyhub-api.onrender.com/api",
+  timeout: 30000,
   headers: {
     'Content-Type': 'application/json',
   },
