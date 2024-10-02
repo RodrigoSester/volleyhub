@@ -1,63 +1,95 @@
 <template>
   <ion-page>
     <ion-content :fullscreen="true">
-      <ion-grid>
-        <ion-row>
-          <ion-col size="12">
-            <ion-label>
-              Email
-            </ion-label>
-            <ion-input
-              type="email"
-              placeholder="example@email.com"
-              fill="outline"
-              required
-            />
-          </ion-col>
-          <ion-col size="12">
-            <ion-label>
-              Password
-            </ion-label>
-            <ion-input
-              type="password"
-              fill="outline"
-              required
-            />
-          </ion-col>
-        </ion-row>
-        <ion-row>
-          <ion-col size="12">
-            <ion-button
-              expand="block"
-              fill="solid"
-              color="primary"
-              routerLink="/home"
-            >
-              Login
-            </ion-button>
-            <ion-button
-              expand="block"
-              fill="outline"
-              color="secondary"
-              routerLink="/register"
-            >
+      <div class="container">
+        <ion-grid class="form" style="align-content: center">
+          <ion-row>
+            <h1>
+              VolleyHub
+            </h1>
+            <ion-col size="12">
               <ion-label>
-                Criar Conta
+                Email
               </ion-label>
-            </ion-button>
-            <ion-label>
-              <a href="/src/views/FolderPage.vue">Esqueceu a senha?</a>
-            </ion-label>
-          </ion-col>
-        </ion-row>
-      </ion-grid>
+              <ion-input
+                style="margin-top: 4px"
+                type="email"
+                placeholder="example@email.com"
+                fill="outline"
+                error-text="Invalid email"
+                required
+                @ionInput="validateEmail($event.target.value)"
+              />
+            </ion-col>
+            <ion-col size="12">
+              <ion-label>
+                Password
+              </ion-label>
+              <ion-input
+                style="margin-top: 4px"
+                type="password"
+                fill="outline"
+                required
+              />
+            </ion-col>
+            <ion-col size="12">
+              <ion-button
+                expand="block"
+                fill="solid"
+                color="primary"
+                routerLink="/home"
+              >
+                Login
+              </ion-button>
+              <ion-button
+                expand="block"
+                fill="outline"
+                color="secondary"
+                routerLink="/register"
+              >
+                <ion-label>
+                  Criar Conta
+                </ion-label>
+              </ion-button>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </div>
     </ion-content>
   </ion-page>
 </template>
 
 <script>
 
+import { defineComponent } from 'vue';
+
+export default defineComponent({
+  name: 'LoginPage',
+  methods: {
+    validateEmail(email) {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        console.log('Invalid email');
+      }
+    },
+  }
+});
+
 </script>
 
 <style scoped>
+
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
+
+.form {
+  width: 100%;
+  max-width: 400px;
+  padding: 20px;
+}
 </style>
