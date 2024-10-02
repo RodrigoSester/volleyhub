@@ -37,7 +37,7 @@
                 expand="block"
                 fill="solid"
                 color="primary"
-                routerLink="/home"
+                @click="login"
               >
                 Login
               </ion-button>
@@ -62,6 +62,7 @@
 <script>
 
 import { defineComponent } from 'vue';
+import { axiosInstance } from '../config/axios.config';
 
 export default defineComponent({
   name: 'LoginPage',
@@ -70,6 +71,22 @@ export default defineComponent({
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!emailRegex.test(email)) {
         console.log('Invalid email');
+      }
+    },
+    async login() {
+      console.log('Login');
+
+      try {
+        const body = {
+          email: 'email',
+          password: 'password',
+        };
+
+        const response = await axiosInstance.post('/login', body);
+
+        console.log(response.data);
+      } catch (error) {
+        console.error(error);
       }
     },
   }
