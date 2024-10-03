@@ -6,7 +6,10 @@
       </ion-toolbar>
     </ion-header>
     <ion-content>
-      <div v-if="teams.length > 0">
+      <ion-grid v-if="loading" style="display: flex; align-items: center; justify-content: center; height: 100%;">
+        <ion-spinner style="height: 64px; width: 64px;" />
+      </ion-grid>
+      <div v-else-if="teams.length > 0 && !loading">
         <ion-card
           v-for="team in teams"
           :key="team.id"
@@ -46,12 +49,14 @@
 import { defineComponent } from 'vue';
 import { axiosInstance } from '../config/axios.config';
 import { alertCircleOutline } from 'ionicons/icons';
+import { showToast } from '../helper/toast.helper';
 
 export default defineComponent({
   name: 'TeamsPage',
   data() {
     return {
       alertCircleOutline,
+      loading: false,
       teams: [],
     };
   },
@@ -60,9 +65,18 @@ export default defineComponent({
   },
   methods: {
     async fetchUserTeams() {
-      const response = await axiosInstance.get('/teams');
-      const data = response.data.body;
-      this.teams = data;
+      this.loading = true;
+
+      try {
+        const response = await axiosInstance.get('/teams');
+  
+        const data = response.data.body;
+        this.teams = data;
+      } catch (error) {
+        showToast('Erro ao buscar times');
+      } finally {
+        this.loading = false;
+      }
     }
   }
 });
