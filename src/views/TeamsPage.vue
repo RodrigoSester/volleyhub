@@ -2,10 +2,14 @@
   <ion-page>
     <ion-header>
       <ion-toolbar>
-        <ion-title>Teams</ion-title>
+        <ion-title>Times</ion-title>
       </ion-toolbar>
     </ion-header>
     <ion-content>
+      <ion-refresher slot="fixed" @ionRefresh="handleRefresh($event)">
+        <ion-refresher-content />
+      </ion-refresher>
+
       <ion-grid v-if="loading" style="display: flex; align-items: center; justify-content: center; height: 100%;">
         <ion-spinner style="height: 64px; width: 64px;" />
       </ion-grid>
@@ -64,6 +68,10 @@ export default defineComponent({
     this.fetchUserTeams();
   },
   methods: {
+    async handleRefresh(event) {
+      await this.fetchUserTeams();
+      event.detail.complete();
+    },
     async fetchUserTeams() {
       this.loading = true;
 
