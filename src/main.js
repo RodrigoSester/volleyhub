@@ -44,6 +44,13 @@ import {
   IonRow,
   IonCol,
   IonGrid,
+
+  // Card components
+  IonCard,
+  IonCardHeader,
+  IonCardTitle,
+  IonCardSubtitle,
+  IonCardContent,
 } from '@ionic/vue';
 
 /* Core CSS required for Ionic components to work properly */
@@ -112,6 +119,11 @@ const components = {
   IonItemSliding,
   IonListHeader,
   IonSearchbar,
+  IonCard,
+  IonCardHeader,
+  IonCardTitle,
+  IonCardSubtitle,
+  IonCardContent,
 };
 
 Object.entries(components).forEach(([name, component]) => {
