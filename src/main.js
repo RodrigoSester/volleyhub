@@ -51,6 +51,16 @@ import {
   IonCardTitle,
   IonCardSubtitle,
   IonCardContent,
+
+  // Loading components
+  IonLoading,
+  IonSpinner,
+  IonProgressBar,
+  IonRefresher,
+  IonRefresherContent,
+
+  // Modal components
+  IonModal,
 } from '@ionic/vue';
 
 /* Core CSS required for Ionic components to work properly */
@@ -124,6 +134,12 @@ const components = {
   IonCardTitle,
   IonCardSubtitle,
   IonCardContent,
+  IonLoading,
+  IonSpinner,
+  IonProgressBar,
+  IonRefresher,
+  IonRefresherContent,
+  IonModal,
 };
 
 Object.entries(components).forEach(([name, component]) => {
