@@ -93,7 +93,7 @@ export default defineComponent({
 
         const response = await axiosInstance.post('/auth/login', body);
 
-        setToken(response.data.body.token);
+        setToken(response.data.body);
         this.$router.push('/home');
       } catch (error) {
         console.error(error);
