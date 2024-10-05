@@ -18,7 +18,7 @@ const _refreshToken = async () => {
 
 const _errorHandler = async error => {
   if (error?.response?.status === 404) {
-    return Promise.reject(error.response);
+    return Promise.reject(new Error(error.response?.data?.message || 'Not Found'));
   }
 
   if (error?.response?.status === 401) {
@@ -27,13 +27,13 @@ const _errorHandler = async error => {
       return axiosInstance(error.config);
     } catch (error) {
       console.error('Error refreshing token', error);
-      return Promise.reject(error);
+      return Promise.reject(new Error(error.message || 'Error refreshing token'));
     }
   }
 
   error.message = error?.response?.data?.error?.message;
 
-  return Promise.reject(error);
+  return Promise.reject(new Error(error.message || 'An error occurred'));
 };
 
 const _successHandler = response => {
