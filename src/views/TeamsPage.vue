@@ -6,7 +6,7 @@
       </ion-toolbar>
     </ion-header>
     <ion-content>
-      <ion-refresher slot="fixed" @ionRefresh="handleRefresh($event)">
+      <ion-refresher @ionRefresh="handleRefresh($event)">
         <ion-refresher-content />
       </ion-refresher>
 
@@ -22,6 +22,9 @@
           <ion-card-header>
             <ion-card-title>{{ team.name }}</ion-card-title>
             <ion-card-subtitle>{{ team.modality }}</ion-card-subtitle>
+            <ion-button shape="round" fill="outline" @click="deleteTeam(team.id)">
+              <ion-icon :icon="trashBinOutline" />
+            </ion-button>
           </ion-card-header>
         </ion-card>
       </div>
@@ -52,7 +55,7 @@
 <script>
 import { defineComponent } from 'vue';
 import { axiosInstance } from '../config/axios.config';
-import { alertCircleOutline } from 'ionicons/icons';
+import { alertCircleOutline, trashBinOutline } from 'ionicons/icons';
 import { showToast } from '../helper/toast.helper';
 
 export default defineComponent({
@@ -60,7 +63,9 @@ export default defineComponent({
   data() {
     return {
       alertCircleOutline,
+      trashBinOutline,
       loading: false,
+      loadingDelete: false,
       teams: [],
     };
   },
@@ -84,6 +89,19 @@ export default defineComponent({
         showToast('Erro ao buscar times');
       } finally {
         this.loading = false;
+      }
+    },
+
+    async deleteTeam(teamId) {
+      this.loadingDelete = true;
+
+      try {
+        await axiosInstance.delete(`/teams/${teamId}`);
+        this.fetchUserTeams();
+      } catch (error) {
+        showToast('Erro ao deletar time');
+      } finally {
+        this.loadingDelete = false;
       }
     }
   }
