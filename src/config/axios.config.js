@@ -27,7 +27,7 @@ const _errorHandler = async error => {
       return axiosInstance(error.config);
     } catch (error) {
       console.error('Error refreshing token', error);
-      
+      return Promise.reject(error);
     }
   }
 
