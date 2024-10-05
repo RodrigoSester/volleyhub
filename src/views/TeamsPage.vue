@@ -30,7 +30,7 @@
                 <ion-button 
                   shape="round" 
                   fill="outline"
-                  @click="deleteTeam(team.id)"
+                  @click.stop="deleteTeam(team.id)"
                 >
                   <ion-icon :icon="trashBinOutline" slot="icon-only" />
                 </ion-button>
@@ -65,7 +65,11 @@
         </ion-fab-button>
       </ion-fab>
     </ion-content>
-    <RegisterTeamModal ref="registerTeamModal" :dataTeam="team" />
+    <RegisterTeamModal
+      ref="registerTeamModal" 
+      :dataTeam="team"
+      @refresh="handleRefresh"
+    />
   </ion-page>
 </template>
 
@@ -107,7 +111,10 @@ export default defineComponent({
     },
     async handleRefresh(event) {
       await this.fetchUserTeams();
-      event.detail.complete();
+
+      if (event) {
+        event.detail.complete();
+      }
     },
     async fetchUserTeams() {
       this.loading = true;
