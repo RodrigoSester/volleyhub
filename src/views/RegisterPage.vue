@@ -159,6 +159,7 @@ export default defineComponent({
           email: this.email,
           password: this.password,
           document: this.document,
+          profile_photo: 'https://th.bing.com/th/id/OIP.oJ0te5_0n4ICw86LZuSxfgHaFi?rs=1&pid=ImgDetMain',
         }
 
         const response = await axiosInstance.post('/auth/register', body);
