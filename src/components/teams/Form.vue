@@ -3,9 +3,9 @@
     <ion-header>
       <ion-toolbar>
         <ion-buttons slot="start">
-          <ion-button @click="cancel()">Cancel</ion-button>
+          <ion-button @click="close()">Cancel</ion-button>
         </ion-buttons>
-        <ion-title>Adicionar time</ion-title>
+        <ion-title>{{ team.id ? "Editar time" : "Adicionar time" }}</ion-title>
       </ion-toolbar>
     </ion-header>
     <ion-content>
@@ -16,21 +16,21 @@
               <ion-col size="12">
                 <ion-label position="floating">Título:</ion-label>
                 <ion-input
+                  v-model="team.name"
                   style="margin-top: 4px"
                   placeholder="Título do time"
                   fill="outline"
                   required
-                  @input="inputTeamValue($event.target.value, 'name')"
                 />
               </ion-col>
               <ion-col size="12">
                 <ion-label position="floating">Abreviação:</ion-label>
                 <ion-input
+                  v-model="team.abbreviation"
                   style="margin-top: 4px"
                   placeholder="Abreviação do time"
                   fill="outline"
                   required
-                  @input="inputTeamValue($event.target.value, 'abbreviation')"
                 />
               </ion-col>
               <ion-col size="12">
@@ -51,21 +51,21 @@
               <ion-col size="12">
                 <ion-label>Link de imagem da sua bandeira:</ion-label>
                 <ion-input
+                  v-model="team.flag_url"
                   style="margin-top: 4px"
                   placeholder="Link da imagem"
                   fill="outline"
                   required
-                  @input="inputTeamValue($event.target.value, 'flag_url')"
                 />
               </ion-col>
               <ion-col size="12">
                 <ion-label>Mensalidade:</ion-label>
                 <ion-input
+                  v-model="team.monthly_fee"
                   style="margin-top: 4px"
                   placeholder="R$ 0,00"
                   fill="outline"
                   required
-                  @input="inputTeamValue($event.target.value, 'monthly_fee')"
                 />
               </ion-col>
             </ion-row>
@@ -84,10 +84,17 @@ import { showToast } from '../../helper/toast.helper';
 
 export default defineComponent({
   name: 'ModalRegisterTeam',
+  props: {
+    dataTeam: {
+      type: Object,
+      default: () => ({}),
+    },
+  },
   data() {
     return {
       isOpen: false,
       team: {
+        id: null,
         name: '',
         abbreviation: '',
         modality: '',
@@ -96,20 +103,41 @@ export default defineComponent({
       },
     };
   },
+  watch: {
+    dataTeam(value) {
+      const data = JSON.parse(JSON.stringify(value));
+
+      if (data) {
+        this.team = {
+          id: data.id,
+          name: data.name,
+          abbreviation: data.abbreviation,
+          modality: data.modality,
+          flag_url: data.flag_url,
+          monthly_fee: data.monthly_fee,
+        };
+      }
+    }
+  },
   methods: {
     open() {
       this.isOpen = true;
     },
     close() {
+      this.resetForm();
       this.isOpen = false;
     },
-    cancel() {
-      this.close();
+    resetForm() {
+      this.team = {
+        id: null,
+        name: '',
+        abbreviation: '',
+        modality: '',
+        flag_url: '',
+        monthly_fee: 0,
+      };
     },
-    inputTeamValue(value, key) {
-      this.team[key] = value;
-    },
-    async registerTeam() {
+    async handleSave() {
       this.loading = true;
 
       try {
@@ -117,13 +145,18 @@ export default defineComponent({
           ...this.team,
         };
 
-        const response = await axiosInstance.post('/teams', body);
+        if (this.team.id) {
+          await axiosInstance.put(`/teams/${this.team.id}`, body);
+        } else {
+          await axiosInstance.post('/teams', body);
+        }
 
-        console.log(response.data);
         this.close();
       } catch (error) {
         console.error(error);
         showToast('Erro ao adicionar time');
+      } finally {
+        this.loading = false;
       }
     }
   },
