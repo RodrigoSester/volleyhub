@@ -34,9 +34,19 @@
                 />
               </ion-col>
               <ion-col size="12">
-                <!-- usar select -->
                 <ion-label position="floating">Modalidade:</ion-label>
-                <ion-input></ion-input>
+                <ion-select 
+                  v-model="team.modality"
+                  justify="space-between"
+                  fill="outline"
+                  interface="popover"
+                  aria-label="Modalidade"
+                  placeholder="Modalidade"
+                >
+                  <ion-select-option value="male">Masculino</ion-select-option>
+                  <ion-select-option value="female">Feminino</ion-select-option>
+                  <ion-select-option value="mixed">Misto</ion-select-option>
+                </ion-select>
               </ion-col>
               <ion-col size="12">
                 <ion-label>Link de imagem da sua bandeira:</ion-label>
@@ -60,7 +70,7 @@
               </ion-col>
             </ion-row>
           </ion-grid>
-          <ion-button expand="block">Adicionar</ion-button>
+          <ion-button expand="block" @click="registerTeam()">Adicionar</ion-button>
         </ion-card-content>
       </ion-card>
     </ion-content>
