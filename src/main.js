@@ -15,6 +15,8 @@ import {
   IonFooter,
   IonTitle,
   IonBackButton,
+
+  IonActionSheet,
   
   // Item components
   IonItem,
@@ -140,6 +142,7 @@ const components = {
   IonRefresher,
   IonRefresherContent,
   IonModal,
+  IonActionSheet,
 };
 
 Object.entries(components).forEach(([name, component]) => {
