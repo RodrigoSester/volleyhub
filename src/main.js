@@ -63,6 +63,11 @@ import {
 
   // Modal components
   IonModal,
+
+  // Fab components
+  IonFab,
+  IonFabButton,
+  IonFabList,
 } from '@ionic/vue';
 
 /* Core CSS required for Ionic components to work properly */
@@ -143,6 +148,9 @@ const components = {
   IonRefresherContent,
   IonModal,
   IonActionSheet,
+  IonFab,
+  IonFabButton,
+  IonFabList,
 };
 
 Object.entries(components).forEach(([name, component]) => {
