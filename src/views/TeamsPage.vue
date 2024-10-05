@@ -17,6 +17,7 @@
         <ion-card
           v-for="team in teams"
           :key="team.id"
+          @click="openRegisterTeamModal(team.id)"
         >
           <img :src="team.flag_url" alt="Team" style="height: 200px; width: 100%">
           <ion-card-header style="display: flex; justify-items: center;">
@@ -64,7 +65,7 @@
         </ion-fab-button>
       </ion-fab>
     </ion-content>
-    <RegisterTeamModal ref="registerTeamModal" />
+    <RegisterTeamModal ref="registerTeamModal" :dataTeam="team" />
   </ion-page>
 </template>
 
@@ -87,6 +88,7 @@ export default defineComponent({
       add,
       loading: false,
       loadingDelete: false,
+      team: {},
       teams: [],
     };
   },
@@ -94,7 +96,13 @@ export default defineComponent({
     this.fetchUserTeams();
   },
   methods: {
-    openRegisterTeamModal() {
+    openRegisterTeamModal(teamId = null) {
+      if (teamId) {
+        this.team = this.teams.find((team) => team.id === teamId);
+        this.$refs.registerTeamModal.open();
+        return;
+      }
+
       this.$refs.registerTeamModal.open();
     },
     async handleRefresh(event) {
