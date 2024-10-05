@@ -41,6 +41,8 @@ import {
   IonButton,
   IonInput,
   IonInputPasswordToggle,
+  IonSelect,
+  IonSelectOption,
   
   // Grid components
   IonRow,
@@ -151,6 +153,8 @@ const components = {
   IonFab,
   IonFabButton,
   IonFabList,
+  IonSelect,
+  IonSelectOption,
 };
 
 Object.entries(components).forEach(([name, component]) => {
