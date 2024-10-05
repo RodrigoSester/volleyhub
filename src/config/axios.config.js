@@ -1,5 +1,6 @@
 import axios from "axios";
 import storageConfig from "./storage.config";
+import { jwtDecode } from 'jwt-decode';
 
 storageConfig.create();
 
@@ -9,9 +10,25 @@ const _requestHandler = async request => {
   return request;
 };
 
-const _errorHandler = error => {
+const _refreshToken = async () => {
+  const refreshToken = await storageConfig.get('refreshToken');
+  const response = await axiosInstance.post('/auth/refresh-token', { refreshToken });
+  await setToken(response.data.body);
+}
+
+const _errorHandler = async error => {
   if (error?.response?.status === 404) {
     return Promise.reject(error.response);
+  }
+
+  if (error?.response?.status === 401) {
+    try {
+      await _refreshToken();
+      return axiosInstance(error.config);
+    } catch (error) {
+      console.error('Error refreshing token', error);
+      
+    }
   }
 
   error.message = error?.response?.data?.error?.message;
@@ -46,10 +63,21 @@ const customAxios = () => {
 
 export const axiosInstance = customAxios();
 
-export const setToken = async (token) => {
+export const setToken = async ({ token, refreshToken }) => {
   await storageConfig.set('authorization', token);
+  await storageConfig.set('refreshToken', refreshToken);
 };
 
 export const isAuthenticated = async () => {
-  return await storageConfig.get('authorization');
+  const token = await storageConfig.get('authorization');
+  if (!token) return false;
+
+  try {
+    const decodedToken = jwtDecode(token);
+    const currentTime = Date.now() / 1000;
+    return decodedToken.exp > currentTime;
+  } catch (error) {
+    console.error('Invalid token', error);
+    return false;
+  }
 };
