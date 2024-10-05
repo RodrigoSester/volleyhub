@@ -37,6 +37,7 @@
                 <ion-label position="floating">Modalidade:</ion-label>
                 <ion-select 
                   v-model="team.modality"
+                  :disabled="team.id"
                   justify="space-between"
                   fill="outline"
                   interface="popover"
@@ -70,7 +71,7 @@
               </ion-col>
             </ion-row>
           </ion-grid>
-          <ion-button expand="block" @click="registerTeam()">Adicionar</ion-button>
+          <ion-button expand="block" @click="handleSave()">Salvar</ion-button>
         </ion-card-content>
       </ion-card>
     </ion-content>
@@ -148,9 +149,11 @@ export default defineComponent({
         if (this.team.id) {
           await axiosInstance.put(`/teams/${this.team.id}`, body);
         } else {
+          delete body.id;
           await axiosInstance.post('/teams', body);
         }
 
+        this.$emit('refresh');
         this.close();
       } catch (error) {
         console.error(error);
