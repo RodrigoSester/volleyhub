@@ -48,7 +48,7 @@ const customAxios = () => {
       Accept         : 'application/json',
       'Content-Type' : 'application/json',
     },
-    baseURL          : "http://localhost:3000/api",
+    baseURL          : "https://volleyhub-api.onrender.com/api",
   });
 
   instance.interceptors.request.use(request => _requestHandler(request));
