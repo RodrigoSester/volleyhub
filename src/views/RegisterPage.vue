@@ -64,6 +64,7 @@
                     fill="outline"
                     error-text="Invalid document"
                     required
+                    maxlength="11"
                     @input="inputDocument($event.target.value)"
                   />
                 </ion-col>
