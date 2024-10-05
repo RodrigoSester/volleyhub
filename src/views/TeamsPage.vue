@@ -51,7 +51,7 @@
                   Adicione um time para começar
                 </ion-card-subtitle>
               </ion-label>
-              <ion-button style="margin-top: 16px;">
+              <ion-button style="margin-top: 16px;" @click="openRegisterTeamModal">
                 Adicionar time
               </ion-button>
             </ion-col>
@@ -59,11 +59,12 @@
         </ion-grid>
       </ion-card>
       <ion-fab slot="fixed" vertical="bottom" horizontal="end">
-        <ion-fab-button @click="openModalRegisterTeam">
+        <ion-fab-button @click="openRegisterTeamModal">
           <ion-icon :icon="add" />
         </ion-fab-button>
       </ion-fab>
     </ion-content>
+    <RegisterTeamModal ref="registerTeamModal" />
   </ion-page>
 </template>
 
@@ -72,9 +73,13 @@ import { defineComponent } from 'vue';
 import { axiosInstance } from '../config/axios.config';
 import { add, alertCircleOutline, trashBinOutline } from 'ionicons/icons';
 import { showToast } from '../helper/toast.helper';
+import RegisterTeamModal from '../components/teams/Form.vue';
 
 export default defineComponent({
   name: 'TeamsPage',
+  components: {
+    RegisterTeamModal,
+  },
   data() {
     return {
       alertCircleOutline,
@@ -89,8 +94,8 @@ export default defineComponent({
     this.fetchUserTeams();
   },
   methods: {
-    openModalRegisterTeam() {
-      console.log('openModalRegisterTeam');
+    openRegisterTeamModal() {
+      this.$refs.registerTeamModal.open();
     },
     async handleRefresh(event) {
       await this.fetchUserTeams();
