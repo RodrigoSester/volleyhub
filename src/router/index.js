@@ -32,6 +32,10 @@ const routes = [
   {
     path: '/login',
     component: () => import ('../views/LoginPage.vue')
+  },
+  {
+    path: '/register',
+    component: () => import ('../views/RegisterPage.vue')
   }
 ]
 
@@ -40,8 +44,8 @@ const router = createRouter({
   routes
 })
 
-router.beforeEach((to, from, next) => {
-  const authenticated = isAuthenticated();
+router.beforeEach(async (to, from, next) => {
+  const authenticated = await isAuthenticated();
 
   if (to.matched.some(record => record.meta.auth) && !authenticated) {
     next('/login');
