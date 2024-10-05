@@ -29,10 +29,9 @@
                 <ion-button 
                   shape="round" 
                   fill="outline"
-                  size="small"
                   @click="deleteTeam(team.id)"
                 >
-                  <ion-icon :icon="trashBinOutline" icon-only />
+                  <ion-icon :icon="trashBinOutline" slot="icon-only" />
                 </ion-button>
               </div>
             </ion-row>
@@ -59,6 +58,11 @@
           </ion-row>
         </ion-grid>
       </ion-card>
+      <ion-fab slot="fixed" vertical="bottom" horizontal="end">
+        <ion-fab-button @click="openModalRegisterTeam">
+          <ion-icon :icon="add" />
+        </ion-fab-button>
+      </ion-fab>
     </ion-content>
   </ion-page>
 </template>
@@ -66,7 +70,7 @@
 <script>
 import { defineComponent } from 'vue';
 import { axiosInstance } from '../config/axios.config';
-import { alertCircleOutline, trashBinOutline } from 'ionicons/icons';
+import { add, alertCircleOutline, trashBinOutline } from 'ionicons/icons';
 import { showToast } from '../helper/toast.helper';
 
 export default defineComponent({
@@ -75,6 +79,7 @@ export default defineComponent({
     return {
       alertCircleOutline,
       trashBinOutline,
+      add,
       loading: false,
       loadingDelete: false,
       teams: [],
@@ -84,6 +89,9 @@ export default defineComponent({
     this.fetchUserTeams();
   },
   methods: {
+    openModalRegisterTeam() {
+      console.log('openModalRegisterTeam');
+    },
     async handleRefresh(event) {
       await this.fetchUserTeams();
       event.detail.complete();
@@ -102,7 +110,6 @@ export default defineComponent({
         this.loading = false;
       }
     },
-
     async deleteTeam(teamId) {
       this.loadingDelete = true;
 
