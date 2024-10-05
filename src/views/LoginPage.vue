@@ -93,7 +93,8 @@ export default defineComponent({
 
         const response = await axiosInstance.post('/auth/login', body);
 
-        setToken(response.data.token);
+        setToken(response.data.body.token);
+        this.$router.push('/home');
       } catch (error) {
         console.error(error);
         showToast('Erro ao fazer login');
