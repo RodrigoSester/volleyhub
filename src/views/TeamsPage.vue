@@ -6,7 +6,7 @@
       </ion-toolbar>
     </ion-header>
     <ion-content>
-      <ion-refresher @ionRefresh="handleRefresh($event)">
+      <ion-refresher slot="fixed" @ionRefresh="handleRefresh($event)">
         <ion-refresher-content />
       </ion-refresher>
 
@@ -18,13 +18,24 @@
           v-for="team in teams"
           :key="team.id"
         >
-          <img :src="team.flag" alt="Team" style="height: 200px; width: 100%">
-          <ion-card-header>
-            <ion-card-title>{{ team.name }}</ion-card-title>
-            <ion-card-subtitle>{{ team.modality }}</ion-card-subtitle>
-            <ion-button shape="round" fill="outline" @click="deleteTeam(team.id)">
-              <ion-icon :icon="trashBinOutline" />
-            </ion-button>
+          <img :src="team.flag_url" alt="Team" style="height: 200px; width: 100%">
+          <ion-card-header style="display: flex; justify-items: center;">
+            <ion-row>
+              <div style="width: 80%;">
+                <ion-card-title>{{ team.name }}</ion-card-title>
+                <ion-card-subtitle>{{ team.modality }}</ion-card-subtitle>
+              </div>
+              <div style="width: 20%;">
+                <ion-button 
+                  shape="round" 
+                  fill="outline"
+                  size="small"
+                  @click="deleteTeam(team.id)"
+                >
+                  <ion-icon :icon="trashBinOutline" icon-only />
+                </ion-button>
+              </div>
+            </ion-row>
           </ion-card-header>
         </ion-card>
       </div>
