@@ -120,7 +120,7 @@ export default defineComponent({
       this.loading = true;
 
       try {
-        const response = await axiosInstance.get('/teams');
+        const response = await axiosInstance.get('/user/teams');
   
         const data = response.data.body;
         this.teams = data;
