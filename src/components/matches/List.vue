@@ -27,15 +27,11 @@ export default defineComponent({
       trophyOutline,
       peopleOutline,
       clipboardOutline,
-      matches: [
-        { name: 'Match 1', type: 'tournament', modality: 'male', startTime: '10:00', endTime: '11:00' },
-        { name: 'Match 2', type: 'training', modality: 'female', startTime: '11:00', endTime: '11:00' },
-        { name: 'Match 3', type: 'friendly_match', modality: 'mixed', startTime: '12:00', endTime: '11:00' },
-        { name: 'Match 4', type: 'leisure', modality: 'male', startTime: '13:00', endTime: '11:00' },
-        { name: 'Match 5', type: 'leisure', modality: 'female', startTime: '14:00', endTime: '11:00' },
-        { name: 'Match 6', type: 'tournament', modality: 'mixed', startTime: '15:00', endTime: '11:00' },
-      ],
+      matches: [],
     }
+  },
+  mounted() {
+    this.generateMatches();
   },
   methods: {
     getIcon(type) {
@@ -49,6 +45,33 @@ export default defineComponent({
           return this.peopleOutline;
         default:
           return this.peopleOutline;
+      }
+    },
+    generateMatches() {
+      function getRandomElement(arr) {
+        return arr[Math.floor(Math.random() * arr.length)];
+      }
+
+      function getRandomTime() {
+        const hour = String(Math.floor(Math.random() * 24)).padStart(2, '0');
+        const minute = String(Math.floor(Math.random() * 60)).padStart(2, '0');
+        return `${hour}:${minute}`;
+      }
+
+      function generateRandomMatch() {
+        const types = ['tournament', 'training', 'friendly_match', 'leisure'];
+        const modalities = ['male', 'female', 'mixed'];
+        return {
+          name: `Match ${Math.floor(Math.random() * 100)}`,
+          type: getRandomElement(types),
+          modality: getRandomElement(modalities),
+          startTime: getRandomTime(),
+          endTime: getRandomTime(),
+        };
+      }
+
+      for (let i = 0; i < 10; i++) {
+        this.matches.push(generateRandomMatch());
       }
     },
   }
