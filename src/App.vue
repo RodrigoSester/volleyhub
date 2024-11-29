@@ -13,9 +13,9 @@ export default defineComponent({
 });
 </script>
 
-<style>
+<style scoped>
 ion-menu ion-content {
-  --background: var(--ion-item-background, var(--ion-background-color, #fff));
+  --background: var(--ion-item-background);
 }
 
 h1 {
