@@ -18,11 +18,11 @@ const routes = [
         path: '/teams',
         component: () => import ('../views/TeamsPage.vue'),
       },
-      // {
-      //   meta: { auth: true },
-      //   path: '/matches',
-      //   component: () => import ('../views/GamesPage.vue'),
-      // },
+      {
+        meta: { auth: true },
+        path: '/matches',
+        component: () => import ('../views/GamesPage.vue'),
+      },
       // {
       //   meta: { auth: true },
       //   path: '/profile',
