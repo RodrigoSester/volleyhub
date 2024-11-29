@@ -6,7 +6,7 @@
           <ion-col size="1" style="align-content:center; justify-content:center;">
             <ion-icon :icon="getIcon(match.type)" style="font-size: 24px;" />
           </ion-col>
-          <ion-col size="11">
+          <ion-col size="11" style="padding-left: 12px;">
             <h2>{{ match.name }}</h2>
             <p>{{ match.type }} &bull; {{ match.modality }} &bull; {{ match.startTime }}h - {{ match.endTime }}h</p>
           </ion-col>
@@ -81,5 +81,9 @@ export default defineComponent({
 <style scoped>
 ion-list, ion-item, ion-label {
   --background: var(--ion-background-color);
+}
+
+ion-item {
+  padding-right: 16px;
 }
 </style>
