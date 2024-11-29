@@ -2,20 +2,24 @@
   <ion-page>
     <ion-header>
       <ion-toolbar>
-        <ion-title>Game's page</ion-title>
+        <ion-title>Calendário de Jogos</ion-title>
       </ion-toolbar>
     </ion-header>
     <ion-content>
-      <ion-button @click="openMenu">Open Menu</ion-button>
+      <ListMatchesPage />
     </ion-content>
   </ion-page>
 </template>
 
 <script>
 import { defineComponent } from 'vue';
+import ListMatchesPage from '../components/matches/List.vue';
 
 export default defineComponent({
-  name: 'HomePage',
+  name: 'GamesPage',
+  components: {
+    ListMatchesPage,
+  },
   methods: {
     openMenu() {
       console.log('Open menu');
@@ -23,3 +27,9 @@ export default defineComponent({
   },
 });
 </script>
+
+<style scoped>
+ion-page, ion-content {
+  background-color: var(--ion-background-color);
+}
+</style>
