@@ -1,2 +1,95 @@
 /* For information on how to create your own theme, please see:
 http://ionicframework.com/docs/theming/ */
+
+:root {
+  /* COLORS */
+  --ion-color-primary: #EC631B;
+
+  --ion-color-primary-green: #65946E;
+
+  --ion-color-secondary-green: #153C1E;
+
+  --ion-color-secondary-red: #B92518;
+
+  --ion-color-secondary-orange: #F49C64;
+
+  /* BACKGROUND */
+  --ion-background-color: white;
+  --ion-background-color-rgb: white;
+
+  /* TEXT */
+  --ion-text-color: #000;
+  --ion-text-color-rgb: 0,0,0;
+
+
+  --ion-backdrop-color: #000;
+  --ion-backdrop-opacity: 0.4;
+  
+  --ion-overlay-background-color: rgba(0,0,0,0.5);
+  
+  --ion-border-color: #000;
+  
+  --ion-box-shadow-color: #000;
+  
+  --ion-tab-bar-background: #fff;
+  --ion-tab-bar-background-focused: #fff;
+  --ion-tab-bar-border-color: #000;
+  --ion-tab-bar-color: #000;
+  --ion-tab-bar-color-selected: #000;
+  
+  --ion-toolbar-background: #fff;
+  --ion-toolbar-border-color: #000;
+  --ion-toolbar-color: #000;
+  --ion-toolbar-segment-color: #000;
+  --ion-toolbar-segment-color-checked: #000;
+  --ion-toolbar-segment-background: #fff;
+  --ion-toolbar-segment-background-checked: #fff;
+  --ion-toolbar-segment-indicator-color: #000;
+  
+  --ion-item-background: #fff;
+  --ion-item-border-color: #000;
+  --ion-item-color: #000;
+  --ion-placeholder-color: #9E9E9E;
+}
+
+:root.ios {
+  --ion-background-color: #F4F4F4;
+}
+
+:root.md {
+  --ion-background-color: #fff;
+
+  /* TEXT */
+  --ion-text-color: #000;
+  --ion-text-color-rgb: 0,0,0;
+
+
+  --ion-backdrop-color: #000;
+  --ion-backdrop-opacity: 0.4;
+  
+  --ion-overlay-background-color: rgba(0,0,0,0.5);
+  
+  --ion-border-color: #000;
+  
+  --ion-box-shadow-color: #000;
+  
+  --ion-tab-bar-background: #fff;
+  --ion-tab-bar-background-focused: #fff;
+  --ion-tab-bar-border-color: #000;
+  --ion-tab-bar-color: #000;
+  --ion-tab-bar-color-selected: #000;
+  
+  --ion-toolbar-background: #fff;
+  --ion-toolbar-border-color: #000;
+  --ion-toolbar-color: #000;
+  --ion-toolbar-segment-color: #000;
+  --ion-toolbar-segment-color-checked: #000;
+  --ion-toolbar-segment-background: #fff;
+  --ion-toolbar-segment-background-checked: #fff;
+  --ion-toolbar-segment-indicator-color: #000;
+  
+  --ion-item-background: #fff;
+  --ion-item-border-color: #000;
+  --ion-item-color: #000;
+  --ion-placeholder-color: #9E9E9E;
+}
