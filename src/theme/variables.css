@@ -1,2 +1,89 @@
 /* For information on how to create your own theme, please see:
 http://ionicframework.com/docs/theming/ */
+
+:root {
+  --ion-font-family: 'Sora', normal !important;
+
+  /* background-color */
+  --ion-background-color: #fdebe0 !important;
+  --ion-background-color-400: #f2f1e6 !important;
+  --ion-background-color-600: #c1d4c5 !important;
+  --ion-background-color-800: #84a98b !important;
+
+  --ion-background-header: #fbd7c1 !important;
+  --ion-background-item-list: #fdefe6 !important;
+
+  --ion-item-background: var(--ion-background-color-400) !important;
+
+  /* text-color */
+  --ion-text-color: #1d1d1d !important;
+  --ion-text-color-400: #777777 !important;
+  --ion-text-color-600: #4a4a4a !important;
+
+  --ion-dark-text-color: #f7ebeb !important;
+
+  --ion-text-green-color: #44634b !important;
+  --ion-text-green-color-600: #a3bfa8 !important;
+}
+
+.btn-default {
+  background-color: var(--ion-background-color-800) !important;
+  color: var(--ion-text-color) !important;
+  border-radius: 8px !important;
+}
+
+.btn-outline {
+  border-radius: 8px !important;
+  border: 1px solid var(--ion-background-color-800) !important;
+  color: var(--ion-background-color-800) !important;
+}
+
+ion-label {
+  font-family: 'Sora', normal !important;
+  color: var(--ion-text-color) !important;
+  font-size: 12px !important;
+}
+
+ion-input {
+  border: 1px solid var(--ion-background-color-800) !important;
+  border-radius: 8px !important;
+
+  background-color: var(--ion-background-color) !important;
+  min-height: 40px !important;
+  color: var(--ion-text-color-400) !important;
+}
+
+span {
+  color: var(--ion-text-color) !important;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+:root.ios {
+  --ion-text-color: #000;
+}
+
+:root.md {
+  --ion-text-color: #222;
+}
+
+@font-face {
+  font-family: 'Sora';
+  font-style: normal;
+  font-weight: 500;
+  src: url('./src/assets/fonts/Sora-Regular.ttf');
+}
+
+@font-face {
+  font-family: 'Sora';
+  font-style: bold;
+  font-weight: 700;
+  src: url('./src/assets/fonts/Sora-Bold.ttf');
+}
+
+@font-face {
+  font-family: 'Sora';
+  font-style: light;
+  font-weight: 300;
+  src: url('./src/assets/fonts/Sora-Light.ttf');
+}
