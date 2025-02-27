@@ -1,4 +1,7 @@
 <template>
+  <ion-refresher slot="fixed" @ionRefresh="fetch($event)">
+    <ion-refresher-content />
+  </ion-refresher>
   <ion-list>
     <ion-item v-for="(match, index) in matches" :key="index">
       <ion-label>
@@ -19,6 +22,8 @@
 <script>
 import { defineComponent } from 'vue';
 import { trophyOutline, peopleOutline, clipboardOutline } from 'ionicons/icons';
+import { showToast } from '../../helper/toast.helper';
+import { axiosInstance } from '../../config/axios.config';
 
 export default defineComponent({
   name: 'ListMatchesPage',
@@ -31,7 +36,7 @@ export default defineComponent({
     }
   },
   mounted() {
-    this.generateMatches();
+    this.fetch();
   },
   methods: {
     getIcon(type) {
@@ -47,31 +52,22 @@ export default defineComponent({
           return this.peopleOutline;
       }
     },
-    generateMatches() {
-      function getRandomElement(arr) {
-        return arr[Math.floor(Math.random() * arr.length)];
-      }
+    async fetch(refreshEvent) {
+      this.loading = true;
 
-      function getRandomTime() {
-        const hour = String(Math.floor(Math.random() * 24)).padStart(2, '0');
-        const minute = String(Math.floor(Math.random() * 60)).padStart(2, '0');
-        return `${hour}:${minute}`;
-      }
+      try {
+        const response = await axiosInstance.get('/user/matches');
+  
+        const data = response.data.body;
+        this.matches = data;
+      } catch (error) {
+        showToast('Erro ao buscar times');
+      } finally {
+        if (refreshEvent) {
+          refreshEvent.target.complete();
+        }
 
-      function generateRandomMatch() {
-        const types = ['tournament', 'training', 'friendly_match', 'leisure'];
-        const modalities = ['male', 'female', 'mixed'];
-        return {
-          name: `Match ${Math.floor(Math.random() * 100)}`,
-          type: getRandomElement(types),
-          modality: getRandomElement(modalities),
-          startTime: getRandomTime(),
-          endTime: getRandomTime(),
-        };
-      }
-
-      for (let i = 0; i < 10; i++) {
-        this.matches.push(generateRandomMatch());
+        this.loading = false;
       }
     },
   }
