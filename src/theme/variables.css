@@ -26,6 +26,14 @@ http://ionicframework.com/docs/theming/ */
   --ion-text-green-color-600: #a3bfa8 !important;
 }
 
+:root.ios {
+  --ion-text-color: #000;
+}
+
+:root.md {
+  --ion-text-color: #222;
+}
+
 .btn-default {
   background-color: var(--ion-background-color-800) !important;
   color: var(--ion-text-color) !important;
@@ -45,26 +53,17 @@ ion-label {
 }
 
 ion-input {
-  border: 1px solid var(--ion-background-color-800) !important;
   border-radius: 8px !important;
-
+  border: 1px solid var(--ion-background-color-800) !important;
   background-color: var(--ion-background-color) !important;
-  min-height: 40px !important;
   color: var(--ion-text-color-400) !important;
+  min-height: 40px !important;
 }
 
 span {
   color: var(--ion-text-color) !important;
   font-size: 14px;
   font-weight: 700;
-}
-
-:root.ios {
-  --ion-text-color: #000;
-}
-
-:root.md {
-  --ion-text-color: #222;
 }
 
 @font-face {

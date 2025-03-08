@@ -1,43 +1,52 @@
 <template>
   <ion-page>
     <ion-content :fullscreen="true">
-      <div class="container">
-        <ion-grid class="form" style="align-content: center">
+      <div class="login">
+        <ion-grid class="login__form" style="align-content: center">
           <ion-row>
-            <h1>
+            <h1 style="font-family: 'Sora'; font-weight: 700; margin-bottom: 20px;">
               VolleyHub
             </h1>
             <ion-col size="12">
-              <ion-label>
+              <ion-label class="login__form__label">
                 Email
               </ion-label>
               <ion-input
-                style="margin-top: 4px"
+                style="margin-top: 4px;"
+                class="login__form__input"
                 type="email"
-                placeholder="example@email.com"
+                inputmode="email"
                 fill="outline"
-                error-text="Invalid email"
+                placeholder="example@email.com"
                 required
                 @input="validateEmail($event.target.value)"
               />
             </ion-col>
             <ion-col size="12">
-              <ion-label>
+              <ion-label class="login__form__label">
                 Password
               </ion-label>
               <ion-input
                 style="margin-top: 4px"
-                type="password"
+                class="login__form__input"
+                :type="showPassword ? 'text' : 'password'"
                 fill="outline"
                 required
                 @input="password = $event.target.value"
-              />
+              >
+                <ion-icon
+                  slot="end"
+                  :icon="showPassword ? 'eye-off' : 'eye'"
+                  @click="showPassword = !showPassword"
+                  style="cursor: pointer"
+                />
+              </ion-input>
             </ion-col>
             <ion-col size="12">
               <ion-button
                 expand="block"
                 fill="solid"
-                color="primary"
+                class="login__form__button-confirm"
                 @click="login"
               >
                 Login
@@ -45,12 +54,10 @@
               <ion-button
                 expand="block"
                 fill="outline"
-                color="secondary"
+                class="login__form__button-cancel"
                 routerLink="/register"
               >
-                <ion-label>
-                  Criar Conta
-                </ion-label>
+                Criar Conta
               </ion-button>
             </ion-col>
           </ion-row>
@@ -72,6 +79,7 @@ export default defineComponent({
     return {
       email: '',
       password: '',
+      showPassword: false,
     };
   },
   methods: {
@@ -105,19 +113,45 @@ export default defineComponent({
 
 </script>
 
-<style scoped>
-
-.container {
+<style scoped lang="scss">
+.login {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   height: 100%;
-}
 
-.form {
-  width: 100%;
-  max-width: 400px;
-  padding: 20px;
+  &__form {
+    width: 100%;
+    max-width: 400px;
+    padding: 20px;
+
+    &__label {
+      font-family: 'Sora';
+      font-weight: 700;
+    }
+
+    &__input {
+      --border-color: var(--ion-background-color-800);
+    }
+
+    &__input.has-focus {
+      --border-color: var(--ion-background-color-600);
+    }
+
+    &__button-confirm {
+      --background: var(--ion-background-color-800);
+      --color: var(--ion-dark-text-color);
+      --border-radius: 4px;
+    }
+
+    &__button-cancel {
+      --border-color: var(--ion-background-color-800);
+      --color: var(--ion-background-color-800);
+      --border-radius: 4px;
+
+
+    }
+  }
 }
 </style>
