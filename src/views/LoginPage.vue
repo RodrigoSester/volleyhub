@@ -4,12 +4,12 @@
       <div class="login">
         <ion-grid class="login__form" style="align-content: center">
           <ion-row>
-            <h1 style="font-family: 'Sora'; font-weight: 700; margin-bottom: 20px;">
+            <h1 class="login__title">
               VolleyHub
             </h1>
-            <ion-col size="12">
+            <ion-col size="12" class="ion-no-padding">
               <ion-label class="login__form__label">
-                Email
+                E-mail
               </ion-label>
               <ion-input
                 style="margin-top: 4px;"
@@ -22,7 +22,7 @@
                 @input="validateEmail($event.target.value)"
               />
             </ion-col>
-            <ion-col size="12">
+            <ion-col size="12" class="ion-no-padding">
               <ion-label class="login__form__label">
                 Password
               </ion-label>
@@ -42,11 +42,11 @@
                 />
               </ion-input>
             </ion-col>
-            <ion-col size="12">
+            <ion-col size="12" class="ion-no-padding">
               <ion-button
                 expand="block"
                 fill="solid"
-                class="login__form__button-confirm"
+                class="ion-margin-vertical login__form__button-confirm"
                 @click="login"
               >
                 Login
@@ -60,6 +60,10 @@
                 Criar Conta
               </ion-button>
             </ion-col>
+
+            <ion-label class="ion-margin-top login__forgot-password">
+              Esqueceu a senha?
+            </ion-label>
           </ion-row>
         </ion-grid>
       </div>
@@ -121,6 +125,13 @@ export default defineComponent({
   align-items: center;
   height: 100%;
 
+  &__title {
+    font-family: 'Sora'; 
+    font-size: 36px;
+    font-weight: 700;
+    margin-bottom: 20px;
+  }
+
   &__form {
     width: 100%;
     max-width: 400px;
@@ -140,18 +151,25 @@ export default defineComponent({
     }
 
     &__button-confirm {
+      height: 40px;
       --background: var(--ion-background-color-800);
       --color: var(--ion-dark-text-color);
       --border-radius: 4px;
     }
 
     &__button-cancel {
+      height: 40px;
       --border-color: var(--ion-background-color-800);
       --color: var(--ion-background-color-800);
       --border-radius: 4px;
-
-
     }
+  }
+
+  &__forgot-password {
+    font-family: 'Sora';
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--ion-text-color-600) !important;
   }
 }
 </style>
