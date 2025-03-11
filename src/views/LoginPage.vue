@@ -55,7 +55,8 @@
                 expand="block"
                 fill="outline"
                 class="login__form__button-cancel"
-                routerLink="/register"
+                router-direction="forward"
+                @click="() => this.$router.push('/register')"
               >
                 Criar Conta
               </ion-button>
