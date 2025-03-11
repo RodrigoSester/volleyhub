@@ -15,7 +15,7 @@
           </ion-col>
         </ion-row>
 
-        <ion-grid class="ion-margin register__form" style="margin-top: 100px;">
+        <ion-grid class="register__form" style="margin-top: 70px;">
           <ion-row class="ion-justify-content-start">
             <ion-col size="12" class="ion-no-padding ion-margin-bottom">
               <ion-label class="register__form__label">
@@ -78,7 +78,6 @@
                 Idade:
               </ion-label>
               <ion-select
-                :interface-options="customActionSheetOptions"
                 interface="popover"
                 placeholder="Selecione sua idade"
                 justify="end"
@@ -104,9 +103,29 @@
                 type="password"
                 fill="outline"
                 class="register__form__input"
+                placeholder="Mínimo de 6 caracteres"
                 required
                 @input="handleInput('password', $event.target.value)"
               />
+              <div class="password-requirements">
+                <p :class="{'valid': hasUpperCase, 'invalid': !hasUpperCase}">• Uma letra maiúscula</p>
+                <p :class="{'valid': hasNumber, 'invalid': !hasNumber}">• Um número</p>
+                <p :class="{'valid': hasSymbol, 'invalid': !hasSymbol}">• Um símbolo (!@#$%^&*)</p>
+                <p :class="{'valid': hasMinLength, 'invalid': !hasMinLength}">• Mínimo 6 caracteres</p>
+              </div>
+              <ion-label class="register__form__label" style="margin-top: 10px">
+                Confirmar Senha:
+              </ion-label>
+              <ion-input
+                style="margin-top: 4px"
+                type="password"
+                fill="outline"
+                class="register__form__input"
+                placeholder="Repita sua senha"
+                required
+                @input="handleInput('confirmPassword', $event.target.value)"
+              />
+              <p v-if="passwordMismatch" class="password-mismatch">As senhas não coincidem</p>
             </ion-col>
             <ion-col size="12" class="ion-no-padding">
               <ion-button class="ion-no-margin register__form__button-confirm" @click="register()">
@@ -123,8 +142,9 @@
 <script>
 import { defineComponent } from 'vue';
 import { axiosInstance, setToken } from '../config/axios.config.js';
-import { showToast } from '../helper/toast.helper';
+import { showErrorToast, showToast } from '../helper/toast.helper';
 import { arrowBack } from 'ionicons/icons';
+import { debounce } from 'lodash';
 
 export default defineComponent({
   name: 'RegisterPage',
@@ -132,10 +152,16 @@ export default defineComponent({
     return {
       arrowBack,
       openActionSheet: false,
+      hasUpperCase: false,
+      hasNumber: false,
+      hasSymbol: false,
+      hasMinLength: false,
+      passwordMismatch: false,
       user: {
         name: '',
         email: '',
         password: '',
+        confirmPassword: '',
         phone: '',
         document: '',
         age: 0,
@@ -143,15 +169,53 @@ export default defineComponent({
     };
   },
   methods: {
-    validateEmail(email) {
+    validateEmail: debounce((email) => {
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!emailRegex.test(email)) {
         return showToast('Invalid email');
       }
+    }, 1000),
 
-      this.inputEmail(email);
-    },
+    validatePassword: debounce((context, password) => {
+      const hasUpperCase = /[A-Z]/.test(password);
+      const hasNumber = /[0-9]/.test(password);
+      const hasSymbol = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password);
+      const hasMinLength = password.length >= 6;
+      const equalPasswords = context.user?.password === context.user?.confirmPassword;
+
+      if (!hasMinLength) {
+        return showToast('Password must have at least 6 characters');
+      }
+
+      if (!hasUpperCase) {
+        return showToast('Password must contain at least one uppercase letter');
+      }
+
+      if (!hasNumber) {
+        return showToast('Password must contain at least one number');
+      }
+
+      if (!hasSymbol) {
+        return showToast('Password must contain at least one symbol');
+      }
+
+      if (!equalPasswords) {
+        return showToast('Passwords do not match');
+      }
+    }, 1000),
+
     handleInput(key, value) {
+      switch (key) {
+        case 'email':
+          this.validateEmail(value);
+          break;
+        case 'password':
+          this.validatePassword(this, value);
+          break;
+        default:
+          break;
+      }
+
       this.user[key] = value;
     },
     goBack() {
@@ -161,6 +225,7 @@ export default defineComponent({
       try {
         const body = {
           ...this.user,
+          profile_photo: 'null'
         };
 
         const response = await axiosInstance.post('/auth/register', body);
@@ -168,7 +233,7 @@ export default defineComponent({
         setToken(response.data.body);
         this.$router.push('/home');
       } catch (error) {
-        showToast('An error occurred while trying to register');
+        showErrorToast(error.message);
       }
     },
   },
@@ -218,6 +283,8 @@ export default defineComponent({
     width: 100%;
     max-width: 400px;
     padding: 20px;
+    max-height: 100%;
+    overflow-y: auto;
 
     &__label {
       font-family: 'Sora';
@@ -252,5 +319,25 @@ export default defineComponent({
 ion-select::part(placeholder) {
   font-size: 14px;
   font-weight: 500;
+}
+
+.password-requirements {
+  margin-top: 10px;
+  margin-bottom: 10px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--ion-text-color-600);
+
+  p {
+    margin-top: 4px;
+  }
+
+  .valid {
+    color: var(--ion-success);
+  }
+
+  .invalid {
+    color: var(--ion-danger);
+  }
 }
 </style>
