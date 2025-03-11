@@ -32,7 +32,7 @@ const _errorHandler = async error => {
     }
   }
 
-  error.message = error?.response?.data?.error?.message;
+  error.message = error?.response?.data?.message;
 
   return Promise.reject(new Error(error.message || 'An error occurred'));
 };
