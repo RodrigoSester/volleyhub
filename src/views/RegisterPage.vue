@@ -44,7 +44,7 @@
                 class="register__form__input"
                 error-text="E-mail inválido"
                 required
-                @ionBlur="markTouched"
+                @ionBlur="markTouched('inputEmail')"
                 @input="handleInput('email', $event.target.value)"
               />
             </ion-col>
@@ -103,6 +103,7 @@
                 Senha:
               </ion-label>
               <ion-input
+                ref="inputPassword"
                 style="margin-top: 4px"
                 type="password"
                 fill="outline"
@@ -121,15 +122,17 @@
                 Confirmar Senha:
               </ion-label>
               <ion-input
+                ref="inputConfirmPassword"
                 style="margin-top: 4px"
                 type="password"
                 fill="outline"
                 class="register__form__input"
                 placeholder="Repita sua senha"
+                error-text="As senhas não coincidem"
                 required
+                @ionBlur="markTouched('inputConfirmPassword')"
                 @input="handleInput('confirmPassword', $event.target.value)"
               />
-              <p v-if="passwordMismatch" class="password-mismatch">As senhas não coincidem</p>
             </ion-col>
             <ion-col size="12" class="ion-no-padding">
               <ion-button class="ion-no-margin register__form__button-confirm" @click="register()">
@@ -185,8 +188,8 @@ export default defineComponent({
     }
   },
   methods: {
-    markTouched() {
-      this.$refs.inputEmail.$el.classList.add('ion-touched');
+    markTouched(reference) {
+      this.$refs[reference].$el.classList.add('ion-touched');
     },
     validateEmail: debounce((context, email) => {
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -198,25 +201,19 @@ export default defineComponent({
     }, 1000),
 
     validatePassword: debounce((context) => {
-      if (!context.hasMinLength) {
-        return showToast('Password must have at least 6 characters');
+      if (!context.hasMinLength || !context.hasUpperCase || !context.hasNumber || !context.hasSymbol) {
+        return context.$refs.inputPassword.$el.classList.add('ion-invalid');
       }
 
-      if (!context.hasUpperCase) {
-        return showToast('Password must contain at least one uppercase letter');
+      context.$refs.inputPassword.$el.classList.remove('ion-invalid');
+    }, 1000),
+
+    validateConfirmPassword: debounce((context) => {
+      if (context.passwordMismatch) {
+        return context.$refs.inputConfirmPassword.$el.classList.add('ion-invalid');
       }
 
-      if (!context.hasNumber) {
-        return showToast('Password must contain at least one number');
-      }
-
-      if (!context.hasSymbol) {
-        return showToast('Password must contain at least one symbol');
-      }
-
-      if (context.user.confirmPassword && !context.equalPasswords) {
-        return showToast('Passwords do not match');
-      }
+      context.$refs.inputConfirmPassword.$el.classList.remove('ion-invalid');
     }, 1000),
 
     handleInput(key, value) {
@@ -224,6 +221,10 @@ export default defineComponent({
       switch (key) {
         case 'email':
           this.validateEmail(this, value);
+          break;
+        case 'confirmPassword':
+            this.user.confirmPassword = value;
+          this.validateConfirmPassword(this, value);
           break;
         case 'password':
           this.validatePassword(this);
