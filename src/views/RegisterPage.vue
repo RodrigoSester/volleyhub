@@ -33,15 +33,18 @@
             </ion-col>
             <ion-col size="12" class="ion-no-padding ion-margin-bottom">
               <ion-label class="register__form__label">
-                Email:
+                E-mail:
               </ion-label>
               <ion-input
+                ref="inputEmail"
                 style="margin-top: 4px"
                 type="email"
                 placeholder="example@email.com"
                 fill="outline"
                 class="register__form__input"
+                error-text="E-mail inválido"
                 required
+                @ionBlur="markTouched"
                 @input="handleInput('email', $event.target.value)"
               />
             </ion-col>
@@ -50,6 +53,7 @@
                 Número:
               </ion-label>
               <ion-input
+                ref="inputPhone"
                 style="margin-top: 4px"
                 type="tel"
                 placeholder="(99) 99999-9999"
@@ -64,6 +68,7 @@
                 Documento:
               </ion-label>
               <ion-input
+                ref="inputDocument"
                 style="margin-top: 4px"
                 placeholder="000.000.000-00"
                 fill="outline"
@@ -73,14 +78,13 @@
                 @input="handleInput('document', $event.target.value)"
               />
             </ion-col>
-            <ion-col size="6" class="ion-no-padding ion-margin-bottom">
+            <ion-col size="4" class="ion-no-padding ion-margin-bottom">
               <ion-label class="register__form__label">
                 Idade:
               </ion-label>
               <ion-select
                 interface="popover"
-                placeholder="Selecione sua idade"
-                justify="end"
+                placeholder="Idade"
                 class="register__form__select"
                 fill="outline"
                 @ionChange="handleInput('age', $event.detail.value)"
@@ -107,11 +111,11 @@
                 required
                 @input="handleInput('password', $event.target.value)"
               />
-              <div class="password-requirements">
-                <p :class="{'valid': hasUpperCase, 'invalid': !hasUpperCase}">• Uma letra maiúscula</p>
-                <p :class="{'valid': hasNumber, 'invalid': !hasNumber}">• Um número</p>
-                <p :class="{'valid': hasSymbol, 'invalid': !hasSymbol}">• Um símbolo (!@#$%^&*)</p>
-                <p :class="{'valid': hasMinLength, 'invalid': !hasMinLength}">• Mínimo 6 caracteres</p>
+              <div class="register__form__password-requirements">
+                <p :class="{'register__form__password-requirements__valid': hasUpperCase, 'register__form__password-requirements__invalid': !hasUpperCase}">• Uma letra maiúscula</p>
+                <p :class="{'register__form__password-requirements__valid': hasNumber, 'register__form__password-requirements__invalid': !hasNumber}">• Um número</p>
+                <p :class="{'register__form__password-requirements__valid': hasSymbol, 'register__form__password-requirements__invalid': !hasSymbol}">• Um símbolo (!@#$%^&*)</p>
+                <p :class="{'register__form__password-requirements__valid': hasMinLength, 'register__form__password-requirements__invalid': !hasMinLength}">• Mínimo 6 caracteres</p>
               </div>
               <ion-label class="register__form__label" style="margin-top: 10px">
                 Confirmar Senha:
@@ -152,11 +156,6 @@ export default defineComponent({
     return {
       arrowBack,
       openActionSheet: false,
-      hasUpperCase: false,
-      hasNumber: false,
-      hasSymbol: false,
-      hasMinLength: false,
-      passwordMismatch: false,
       user: {
         name: '',
         email: '',
@@ -166,54 +165,84 @@ export default defineComponent({
         document: '',
         age: 0,
       }
-    };
+    }
+  },
+  computed: {
+    hasUpperCase() {
+      return /[A-Z]/.test(this.user.password);
+    },
+    hasNumber() {
+      return /[0-9]/.test(this.user.password);
+    },
+    hasSymbol() {
+      return /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(this.user.password);
+    },
+    hasMinLength() {
+      return this.user.password.length >= 6;
+    },
+    passwordMismatch() {
+      return this.user.password !== this.user.confirmPassword;
+    }
   },
   methods: {
-    validateEmail: debounce((email) => {
+    markTouched() {
+      this.$refs.inputEmail.$el.classList.add('ion-touched');
+    },
+    validateEmail: debounce((context, email) => {
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!emailRegex.test(email)) {
-        return showToast('Invalid email');
+        return context.$refs.inputEmail.$el.classList.add('ion-invalid');
       }
+
+      context.$refs.inputEmail.$el.classList.remove('ion-invalid');
     }, 1000),
 
-    validatePassword: debounce((context, password) => {
-      const hasUpperCase = /[A-Z]/.test(password);
-      const hasNumber = /[0-9]/.test(password);
-      const hasSymbol = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(password);
-      const hasMinLength = password.length >= 6;
-      const equalPasswords = context.user?.password === context.user?.confirmPassword;
-
-      if (!hasMinLength) {
+    validatePassword: debounce((context) => {
+      if (!context.hasMinLength) {
         return showToast('Password must have at least 6 characters');
       }
 
-      if (!hasUpperCase) {
+      if (!context.hasUpperCase) {
         return showToast('Password must contain at least one uppercase letter');
       }
 
-      if (!hasNumber) {
+      if (!context.hasNumber) {
         return showToast('Password must contain at least one number');
       }
 
-      if (!hasSymbol) {
+      if (!context.hasSymbol) {
         return showToast('Password must contain at least one symbol');
       }
 
-      if (!equalPasswords) {
+      if (context.user.confirmPassword && !context.equalPasswords) {
         return showToast('Passwords do not match');
       }
     }, 1000),
 
     handleInput(key, value) {
+      let numberValue;
       switch (key) {
         case 'email':
-          this.validateEmail(value);
+          this.validateEmail(this, value);
           break;
         case 'password':
-          this.validatePassword(this, value);
+          this.validatePassword(this);
+          break;
+        case 'phone':
+          numberValue = value.replace(/\D+/g, '');
+          this.$refs.inputPhone.$el.value = value.replace(/\D+/g, '');
+          break;
+        case 'document':
+          numberValue = value.replace(/\D+/g, '');
+          this.$refs.inputDocument.$el.value = value.replace(/\D+/g, '');
           break;
         default:
           break;
+      }
+
+      if (numberValue) {
+        this.user[key] = numberValue;
+        return;
       }
 
       this.user[key] = value;
@@ -291,14 +320,6 @@ export default defineComponent({
       font-weight: 700;
     }
 
-    &__input {
-      --border-color: var(--ion-background-color-800);
-    }
-
-    &__input.has-focus {
-      --border-color: var(--ion-background-color-600);
-    }
-
     &__select {
       --border-color: var(--ion-background-color-800) !important;
       --border-radius: 4px !important;
@@ -313,31 +334,27 @@ export default defineComponent({
       --color: var(--ion-dark-text-color);
       --border-radius: 4px;
     }
+
+    &__password-requirements {
+      margin-top: 10px;
+      margin-bottom: 10px;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--ion-text-color-600);
+
+      &__valid {
+        color: var(--ion-success-color);
+      }
+
+      &__invalid {
+        color: var(--ion-danger-color);
+      }
+    }
   }
 }
 
 ion-select::part(placeholder) {
   font-size: 14px;
   font-weight: 500;
-}
-
-.password-requirements {
-  margin-top: 10px;
-  margin-bottom: 10px;
-  font-size: 12px;
-  font-weight: 700;
-  color: var(--ion-text-color-600);
-
-  p {
-    margin-top: 4px;
-  }
-
-  .valid {
-    color: var(--ion-success);
-  }
-
-  .invalid {
-    color: var(--ion-danger);
-  }
 }
 </style>
