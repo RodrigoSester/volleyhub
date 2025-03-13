@@ -108,7 +108,7 @@
                 type="password"
                 fill="outline"
                 class="register__form__input"
-                placeholder="Mínimo de 6 caracteres"
+                placeholder="Sua senha"
                 required
                 @input="handleInput('password', $event.target.value)"
               />
