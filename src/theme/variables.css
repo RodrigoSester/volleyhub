@@ -24,6 +24,10 @@ http://ionicframework.com/docs/theming/ */
 
   --ion-text-green-color: #44634b !important;
   --ion-text-green-color-600: #a3bfa8 !important;
+
+  /* color */
+  --ion-success-color: #4caf50 !important;
+  --ion-danger-color: #f44336 !important;
 }
 
 :root.ios {
@@ -53,12 +57,32 @@ ion-label {
 }
 
 ion-input {
-  border-radius: 8px !important;
-  border: 1px solid var(--ion-background-color-800) !important;
   background-color: var(--ion-background-color) !important;
   color: var(--ion-text-color-600) !important;
   min-height: 40px !important;
   --placeholder-color: var(--ion-text-color-400) !important;
+  
+  .input-wrapper {
+    border-radius: 8px !important;
+    border: 2px solid var(--ion-background-color-800) !important;
+
+    .input-outline-start {
+      border: 0 !important;
+    }
+
+    .input-outline-end {
+      border: 0 !important;
+    }
+  }
+
+  .input-bottom {
+    padding: 4px 0 0 4px !important;
+    border: 0 !important;
+  }
+}
+
+ion-input.ion-invalid .input-wrapper {
+  border: 2px solid var(--ion-danger-color) !important;
 }
 
 span {
