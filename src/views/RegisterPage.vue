@@ -172,10 +172,10 @@ export default defineComponent({
       return /[A-Z]/.test(this.user.password);
     },
     hasNumber() {
-      return /[0-9]/.test(this.user.password);
+      return /\D/.test(this.user.password);
     },
     hasSymbol() {
-      return /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(this.user.password);
+      return /[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/.test(this.user.password);
     },
     hasMinLength() {
       return this.user.password.length >= 6;
