@@ -1,6 +1,6 @@
 <template>
-  <ion-page>
-    <ion-content class="ion-padding" :fullscreen="true">
+  <ion-page class="ion-no-padding">
+    <ion-content :fullscreen="true">
       <div class="register">
         <ion-row class="register__header ion-align-items-center">
           <ion-col size="3" class="ion-no-padding">
@@ -158,7 +158,7 @@
 <script>
 import { defineComponent } from 'vue';
 import { axiosInstance, setToken } from '../config/axios.config.js';
-import { showErrorToast, showSuccessToast, showToast } from '../helper/toast.helper';
+import { showErrorToast, showSuccessToast } from '../helper/toast.helper';
 import { arrowBack } from 'ionicons/icons';
 import { debounce } from 'lodash';
 
@@ -184,7 +184,7 @@ export default defineComponent({
       return /[A-Z]/.test(this.user.password);
     },
     hasNumber() {
-      return /\D/.test(this.user.password);
+      return /\d/.test(this.user.password);
     },
     hasSymbol() {
       return /[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/.test(this.user.password);
@@ -196,12 +196,15 @@ export default defineComponent({
       return this.user.password !== this.user.confirmPassword;
     },
     hasValidPassword() {
-      return this.hasUpperCase && this.hasNumber && this.hasSymbol && this.hasMinLength && !this.passwordMismatch;
+      return this.hasUpperCase && this.hasNumber && this.hasSymbol && this.hasMinLength;
     }
   },
   methods: {
     markTouched(reference) {
       this.$refs[reference].$el.classList.add('ion-touched');
+    },
+    getUserPropertyInputKey(key) {
+      return key.charAt(0).toUpperCase() + key.slice(1)
     },
     validateEmail: debounce((context, email) => {
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -229,6 +232,8 @@ export default defineComponent({
     }, 1000),
 
     handleInput(key, value) {
+      this.$refs[`input${this.getUserPropertyInputKey(key)}`].$el.classList.remove('ion-invalid');
+
       let numberValue;
       switch (key) {
         case 'email':
@@ -266,8 +271,8 @@ export default defineComponent({
     validateForm() {
       for (const userProperty in this.user) {
         if (!this.user[userProperty]) {
-          this.markTouched(`input${userProperty.charAt(0).toUpperCase() + userProperty.slice(1)}`);
-          this.$refs[`input${userProperty.charAt(0).toUpperCase() + userProperty.slice(1)}`].$el.classList.add('ion-invalid');
+          this.markTouched(`input${this.getUserPropertyInputKey(userProperty)}`);
+          this.$refs[`input${this.getUserPropertyInputKey(userProperty)}`].$el.classList.add('ion-invalid');
         }
       }
 
@@ -289,8 +294,12 @@ export default defineComponent({
 
       try {
         const body = {
-          ...this.user,
-          profile_photo: 'null'
+          name: this.user.name,
+          email: this.user.email,
+          password: this.user.password,
+          phone: this.user.phone,
+          document: this.user.document,
+          age: this.user.age,
         };
 
         const response = await axiosInstance.post('/auth/register', body);
