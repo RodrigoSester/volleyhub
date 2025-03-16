@@ -12,33 +12,39 @@
                 E-mail
               </ion-label>
               <ion-input
+                ref="inputEmail"
                 style="margin-top: 4px;"
                 class="login__form__input"
                 type="email"
                 inputmode="email"
                 fill="outline"
                 placeholder="example@email.com"
+                error-text="E-mail inválido"
                 required
-                @input="validateEmail($event.target.value)"
+                @ionBlur="markTouched('inputEmail')"
+                @input="handleInput('email', $event.target.value)"
               />
             </ion-col>
-            <ion-col size="12" class="ion-no-padding">
+            <ion-col size="12" class="ion-no-padding ion-padding-top">
               <ion-label class="login__form__label">
                 Password
               </ion-label>
               <ion-input
+                ref="inputPassword"
                 style="margin-top: 4px"
                 class="login__form__input"
                 :type="showPassword ? 'text' : 'password'"
                 fill="outline"
+                error-text="Senha é obrigatória"
                 required
-                @input="password = $event.target.value"
+                @ionBlur="markTouched('inputPassword')"
+                @input="handleInput('password', $event.target.value)"
               >
                 <ion-icon
                   slot="end"
-                  :icon="showPassword ? 'eye-off' : 'eye'"
-                  @click="showPassword = !showPassword"
                   style="cursor: pointer"
+                  :icon="showPassword ? eyeOff : eye"
+                  @click="showPassword = !showPassword"
                 />
               </ion-input>
             </ion-col>
@@ -73,30 +79,70 @@
 </template>
 
 <script>
-
 import { defineComponent } from 'vue';
 import { axiosInstance, setToken } from '../config/axios.config';
-import { showToast } from '../helper/toast.helper';
+import { showErrorToast } from '../helper/toast.helper';
+import { debounce } from 'lodash';
+import { eye, eyeOff } from 'ionicons/icons';
 
 export default defineComponent({
   name: 'LoginPage',
   data() {
     return {
-      email: '',
-      password: '',
+      eye,
+      eyeOff,
       showPassword: false,
+      user: {
+        email: '',
+        password: '',
+      },
     };
   },
   methods: {
-    validateEmail(email) {
+    markTouched(reference) {
+      this.$refs[reference].$el.classList.add('ion-touched');
+    },
+    getUserPropertyInputKey(key) {
+      return key.charAt(0).toUpperCase() + key.slice(1)
+    },
+    validateEmail: debounce((context, email) => {
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!emailRegex.test(email)) {
-        console.log('Invalid email');
+        return context.$refs.inputEmail.$el.classList.add('ion-invalid');
       }
 
-      this.email = email;
+      context.$refs.inputEmail.$el.classList.remove('ion-invalid');
+    }, 1000),
+    validateForm() {
+      let isValid = true;
+      
+      if (!this.email) {
+        this.markTouched('inputEmail');
+        this.$refs.inputEmail.$el.classList.add('ion-invalid');
+        isValid = false;
+      }
+      
+      if (!this.password) {
+        this.markTouched('inputPassword');
+        this.$refs.inputPassword.$el.classList.add('ion-invalid');
+        isValid = false;
+      }
+      
+      return isValid;
+    },
+    handleInput(key, value) {
+      this.$refs[`input${this.getUserPropertyInputKey(key)}`].$el.classList.remove('ion-invalid');
+
+      if (key === 'email') {
+        this.validateEmail(this, value);
+      }
+
+      this.user[key] = value;
     },
     async login() {
+      if (!this.validateForm()) {
+        return showErrorToast('Há erros no preenchimento. Revise os campos e tente novamente.');
+      }
 
       try {
         const body = {
@@ -109,13 +155,11 @@ export default defineComponent({
         setToken(response.data.body);
         this.$router.push('/home');
       } catch (error) {
-        console.error(error);
-        showToast('Erro ao fazer login');
+        showErrorToast('Erro ao fazer login. Verifique seu e-mail e senha.');
       }
     },
   }
 });
-
 </script>
 
 <style scoped lang="scss">
