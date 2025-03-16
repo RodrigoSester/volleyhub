@@ -85,6 +85,31 @@ ion-input.ion-invalid .input-wrapper {
   border: 2px solid var(--ion-danger-color) !important;
 }
 
+ion-select {
+  background-color: var(--ion-background-color) !important;
+  color: var(--ion-text-color-600) !important;
+  min-height: 40px !important;
+  border: 0px !important;
+  --placeholder-color: var(--ion-text-color-400) !important;
+  --border-color: var(--ion-background-color-800) !important;
+  --border-radius: 8px !important;
+  --border-width: 2px !important;
+  
+  .select-wrapper {
+    .select-outline-start {
+      border: 0 !important;
+    }
+
+    .select-outline-end {
+      border: 0 !important;
+    }
+  }
+}
+
+ion-select.ion-invalid {
+  --border-color: var(--ion-danger-color) !important;
+}
+
 span {
   color: var(--ion-text-color) !important;
   font-size: 14px;
