@@ -19,21 +19,24 @@
           <ion-row class="ion-justify-content-start">
             <ion-col size="12" class="ion-no-padding ion-margin-bottom">
               <ion-label class="register__form__label">
-                Nome:
+                Nome:*
               </ion-label>
               <ion-input
+                ref="inputName"
                 style="margin-top: 4px"
                 type="email"
                 fill="outline"
                 class="register__form__input"
+                error-text="Nome inválido"
                 placeholder="John Doe"
                 required
+                @ionBlur="markTouched('inputName')"
                 @input="handleInput('name', $event.target.value)"
               />
             </ion-col>
             <ion-col size="12" class="ion-no-padding ion-margin-bottom">
               <ion-label class="register__form__label">
-                E-mail:
+                E-mail:*
               </ion-label>
               <ion-input
                 ref="inputEmail"
@@ -50,13 +53,14 @@
             </ion-col>
             <ion-col size="12" class="ion-no-padding ion-margin-bottom">
               <ion-label class="register__form__label">
-                Número:
+                Número:*
               </ion-label>
               <ion-input
                 ref="inputPhone"
                 style="margin-top: 4px"
                 type="tel"
                 placeholder="(99) 99999-9999"
+                error-text="Número inválido"
                 fill="outline"
                 class="register__form__input"
                 required
@@ -65,12 +69,13 @@
             </ion-col>
             <ion-col size="12" class="ion-no-padding ion-margin-bottom">
               <ion-label class="register__form__label">
-                Documento:
+                Documento:*
               </ion-label>
               <ion-input
                 ref="inputDocument"
                 style="margin-top: 4px"
                 placeholder="000.000.000-00"
+                error-text="Documento inválido"
                 fill="outline"
                 class="register__form__input"
                 required
@@ -80,13 +85,17 @@
             </ion-col>
             <ion-col size="4" class="ion-no-padding ion-margin-bottom">
               <ion-label class="register__form__label">
-                Idade:
+                Idade:*
               </ion-label>
               <ion-select
+                v-model="user.age"
+                ref="inputAge"
                 interface="popover"
                 placeholder="Idade"
-                class="register__form__select"
+                error-text="Selecione uma idade"
                 fill="outline"
+                required
+                @ionBlur="markTouched('inputAge')"
                 @ionChange="handleInput('age', $event.detail.value)"
               >
                 <ion-select-option
@@ -100,7 +109,7 @@
             </ion-col>
             <ion-col size="12" class="ion-no-padding ion-margin-bottom">
               <ion-label class="register__form__label">
-                Senha:
+                Senha:*
               </ion-label>
               <ion-input
                 ref="inputPassword"
@@ -119,7 +128,7 @@
                 <p :class="{'register__form__password-requirements__valid': hasMinLength, 'register__form__password-requirements__invalid': !hasMinLength}">• Mínimo 6 caracteres</p>
               </div>
               <ion-label class="register__form__label" style="margin-top: 10px">
-                Confirmar Senha:
+                Confirmar Senha:*
               </ion-label>
               <ion-input
                 ref="inputConfirmPassword"
@@ -135,7 +144,7 @@
               />
             </ion-col>
             <ion-col size="12" class="ion-no-padding">
-              <ion-button class="ion-no-margin register__form__button-confirm" @click="register()">
+              <ion-button class="ion-no-margin register__form__button-confirm" type="submit" @click="register()">
                 Criar conta
               </ion-button>
             </ion-col>
@@ -149,7 +158,7 @@
 <script>
 import { defineComponent } from 'vue';
 import { axiosInstance, setToken } from '../config/axios.config.js';
-import { showErrorToast, showToast } from '../helper/toast.helper';
+import { showErrorToast, showSuccessToast, showToast } from '../helper/toast.helper';
 import { arrowBack } from 'ionicons/icons';
 import { debounce } from 'lodash';
 
@@ -185,6 +194,9 @@ export default defineComponent({
     },
     passwordMismatch() {
       return this.user.password !== this.user.confirmPassword;
+    },
+    hasValidPassword() {
+      return this.hasUpperCase && this.hasNumber && this.hasSymbol && this.hasMinLength && !this.passwordMismatch;
     }
   },
   methods: {
@@ -201,7 +213,7 @@ export default defineComponent({
     }, 1000),
 
     validatePassword: debounce((context) => {
-      if (!context.hasMinLength || !context.hasUpperCase || !context.hasNumber || !context.hasSymbol) {
+      if (!context.hasValidPassword) {
         return context.$refs.inputPassword.$el.classList.add('ion-invalid');
       }
 
@@ -223,7 +235,7 @@ export default defineComponent({
           this.validateEmail(this, value);
           break;
         case 'confirmPassword':
-            this.user.confirmPassword = value;
+          this.user.confirmPassword = value;
           this.validateConfirmPassword(this, value);
           break;
         case 'password':
@@ -251,7 +263,30 @@ export default defineComponent({
     goBack() {
       this.$router.go(-1);
     },
+    validateForm() {
+      for (const userProperty in this.user) {
+        if (!this.user[userProperty]) {
+          this.markTouched(`input${userProperty.charAt(0).toUpperCase() + userProperty.slice(1)}`);
+          this.$refs[`input${userProperty.charAt(0).toUpperCase() + userProperty.slice(1)}`].$el.classList.add('ion-invalid');
+        }
+      }
+
+      return (
+        this.user.name &&
+        this.user.email &&
+        this.user.password &&
+        this.user.confirmPassword &&
+        this.user.phone &&
+        this.user.document &&
+        this.user.age &&
+        this.hasValidPassword
+      );
+    },
     async register() {
+      if (!this.validateForm()) {
+        return showErrorToast('Há erros no preenchimento. Revise os campos e tente novamente.');
+      }
+
       try {
         const body = {
           ...this.user,
@@ -260,6 +295,7 @@ export default defineComponent({
 
         const response = await axiosInstance.post('/auth/register', body);
 
+        showSuccessToast('Conta criada com sucesso!');
         setToken(response.data.body);
         this.$router.push('/home');
       } catch (error) {
@@ -319,13 +355,6 @@ export default defineComponent({
     &__label {
       font-family: 'Sora';
       font-weight: 700;
-    }
-
-    &__select {
-      --border-color: var(--ion-background-color-800) !important;
-      --border-radius: 4px !important;
-      --border-width: 2px !important;
-      min-height: 40px;
     }
 
     &__button-confirm {
