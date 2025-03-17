@@ -116,6 +116,20 @@ span {
   font-weight: 700;
 }
 
+ion-loading {
+  --spinner-color: var(--ion-text-color) !important;
+
+  .loading-wrapper.ion-overlay-wrapper {
+    box-shadow: none !important;
+    background: none !important;
+
+    .loading-spinner ion-spinner {
+      width: 64px !important;
+      height: 64px !important;
+    }
+  }
+}
+
 @font-face {
   font-family: 'Sora';
   font-style: normal;
