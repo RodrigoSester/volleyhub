@@ -1,6 +1,6 @@
 <template>
-  <ion-page class="home" style="padding: 16px 16px 0px 16px;">
-    <ion-content>
+  <ion-page class="home">
+    <ion-content class="custom-scrollbar">
       <ion-title class="home__title" style="margin-bottom: 24px">
         Olá, {{ user.name }}!
       </ion-title>
@@ -19,81 +19,25 @@
               </span>
             </ion-row>
           </ion-card-header>
-          <ion-card-content class="home__card__content">
+          <ion-card-content class="home__card__content ion-no-padding">
             <ion-list class="ion-no-padding home__card__content__list">
-              <ion-item class="home__card__content__list">
-                <ion-label>
-                  Amistoso Gamma
-                </ion-label>
-                <span>
-                  Masculino • 25/01
-                </span>
-              </ion-item>
-              <ion-item>
-                <ion-label>
-                  <h2>Partida 2</h2>
-                  <p>Local: Quadra 2</p>
-                  <p>Data: 02/01/2022</p>
-                </ion-label>
+              <ion-item class="home__card__content__list__item ion-align-items-center ion-justify-content-between">
+                <div>
+                  <span>
+                    Amistoso Gamma
+                  </span>
+                  <ion-label class="subtitle">
+                    Masculino • 25/01
+                  </ion-label>
+                </div>
+                <ion-note slot="end">
+                  <ion-chip class="warning">Pendente</ion-chip>
+                </ion-note>
               </ion-item>
             </ion-list>
           </ion-card-content>
         </ion-card>
       </div>
-
-      <ion-card>
-        <ion-card-header>
-          <ion-card-title>
-            Notificação
-          </ion-card-title>
-          <ion-card-subtitle>
-            Confira as notificações
-          </ion-card-subtitle>
-        </ion-card-header>
-        <ion-card-content>
-          <ion-list>
-            <ion-item>
-              <ion-label>
-                <h2>Notificação 1</h2>
-                <p>Descrição da notificação 1</p>
-              </ion-label>
-            </ion-item>
-            <ion-item>
-              <ion-label>
-                <h2>Notificação 2</h2>
-                <p>Descrição da notificação 2</p>
-              </ion-label>
-            </ion-item>
-          </ion-list>
-        </ion-card-content>
-      </ion-card>
-
-      <ion-card>
-        <ion-card-header>
-          <ion-card-title>
-            Lembretes
-          </ion-card-title>
-          <ion-card-subtitle>
-            Confira os lembretes
-          </ion-card-subtitle>
-        </ion-card-header>
-        <ion-card-content>
-          <ion-list>
-            <ion-item>
-              <ion-label>
-                <h2>Lembrete 1</h2>
-                <p>Descrição do lembrete 1</p>
-              </ion-label>
-            </ion-item>
-            <ion-item>
-              <ion-label>
-                <h2>Lembrete 2</h2>
-                <p>Descrição do lembrete 2</p>
-              </ion-label>
-            </ion-item>
-          </ion-list>
-        </ion-card-content>
-      </ion-card>
     </ion-content>
   </ion-page>
 </template>
@@ -119,7 +63,38 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: var(--ion-text-color-400) var(--ion-color-primary) !important;
+  
+  &::-webkit-scrollbar-corner {
+    background-color: var(--ion-text-color-400);
+    position: absolute;
+    right: 0;
+  }
+
+  &::-webkit-scrollbar {
+    position: absolute;
+    right: 0;
+    width: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    position: absolute;
+    right: 0;
+    background: var(--ion-text-color-400) !important;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    position: absolute;
+    right: 0;
+    background: var(--ion-text-color-400) !important;
+  }
+}
+
 .home {
+  padding: 24px 24px 0px 24px !important;
+
   &__title {
     font-family: 'Sora';
     font-size: 36px;
@@ -127,8 +102,8 @@ export default defineComponent({
   }
   
   &__card {
-    border-radius: 4px;
-    border: 1px solid var(--ion-background-color-600) !important;
+    border-radius: 8px;
+    border: 3px solid var(--ion-background-color-600) !important;
 
     &__title {
       font-family: 'Sora';
@@ -150,7 +125,6 @@ export default defineComponent({
 
       &__list {
         background-color: var(--ion-background-color-400) !important;
-        mix-blend-mode: color;
       }
     }
   }
