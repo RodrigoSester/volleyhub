@@ -9,7 +9,7 @@
             </h1>
             <ion-col size="12" class="ion-no-padding">
               <ion-label class="login__form__label">
-                E-mail
+                E-mail:
               </ion-label>
               <ion-input
                 ref="inputEmail"
@@ -27,7 +27,7 @@
             </ion-col>
             <ion-col size="12" class="ion-no-padding ion-padding-top">
               <ion-label class="login__form__label">
-                Password
+                Password:
               </ion-label>
               <ion-input
                 ref="inputPassword"
@@ -62,19 +62,25 @@
                 fill="outline"
                 class="login__form__button-cancel"
                 router-direction="forward"
-                @click="() => this.$router.push('/register')"
+                @click="goToRegisterPage"
               >
                 Criar Conta
               </ion-button>
             </ion-col>
 
-            <ion-label class="ion-margin-top login__forgot-password">
+            <!-- <ion-label class="ion-margin-top login__forgot-password">
               Esqueceu a senha?
-            </ion-label>
+            </ion-label> -->
           </ion-row>
         </ion-grid>
       </div>
     </ion-content>
+
+    <ion-loading
+      spinner="circular"
+      :is-open="loading"
+      :translucent="true"
+    />
   </ion-page>
 </template>
 
@@ -91,6 +97,7 @@ export default defineComponent({
     return {
       eye,
       eyeOff,
+      loading: false,
       showPassword: false,
       user: {
         email: '',
@@ -99,6 +106,12 @@ export default defineComponent({
     };
   },
   methods: {
+    goToRegisterPage() {
+      for (const key in this.user) {
+        this.$refs[`input${this.getUserPropertyInputKey(key)}`].$el.classList.remove('ion-invalid');
+      }
+      this.$router.push('/register');
+    },
     markTouched(reference) {
       this.$refs[reference].$el.classList.add('ion-touched');
     },
@@ -113,41 +126,36 @@ export default defineComponent({
 
       context.$refs.inputEmail.$el.classList.remove('ion-invalid');
     }, 1000),
+      handleInput(key, value) {
+        this.$refs[`input${this.getUserPropertyInputKey(key)}`].$el.classList.remove('ion-invalid');
+  
+        if (key === 'email') {
+          this.validateEmail(this, value);
+        }
+  
+        this.user[key] = value;
+      },
     validateForm() {
-      let isValid = true;
-      
-      if (!this.email) {
-        this.markTouched('inputEmail');
-        this.$refs.inputEmail.$el.classList.add('ion-invalid');
-        isValid = false;
-      }
-      
-      if (!this.password) {
-        this.markTouched('inputPassword');
-        this.$refs.inputPassword.$el.classList.add('ion-invalid');
-        isValid = false;
-      }
-      
-      return isValid;
-    },
-    handleInput(key, value) {
-      this.$refs[`input${this.getUserPropertyInputKey(key)}`].$el.classList.remove('ion-invalid');
-
-      if (key === 'email') {
-        this.validateEmail(this, value);
+      for (const userProperty in this.user) {
+        if (!this.user[userProperty]) {
+          this.markTouched(`input${this.getUserPropertyInputKey(userProperty)}`);
+          this.$refs[`input${this.getUserPropertyInputKey(userProperty)}`].$el.classList.add('ion-invalid');
+        }
       }
 
-      this.user[key] = value;
+      return (this.user.email && this.user.password);
     },
     async login() {
       if (!this.validateForm()) {
         return showErrorToast('Há erros no preenchimento. Revise os campos e tente novamente.');
       }
 
+      this.loading = true;
+
       try {
         const body = {
-          email: this.email,
-          password: this.password,
+          email: this.user.email,
+          password: this.user.password,
         };
 
         const response = await axiosInstance.post('/auth/login', body);
@@ -156,6 +164,8 @@ export default defineComponent({
         this.$router.push('/home');
       } catch (error) {
         showErrorToast('Erro ao fazer login. Verifique seu e-mail e senha.');
+      } finally {
+        this.loading = false;
       }
     },
   }
