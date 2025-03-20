@@ -1,7 +1,7 @@
 <template>
   <ion-page class="home">
     <ion-content class="custom-scrollbar">
-      <ion-title class="home__title" style="margin-bottom: 24px">
+      <ion-title class="home__title ion-no-padding ion-margin-bottom">
         Olá, {{ user.name }}!
       </ion-title>
       <div>
