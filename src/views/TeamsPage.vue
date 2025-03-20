@@ -1,8 +1,8 @@
 <template>
-  <ion-page>
-    <ion-header>
-      <ion-toolbar>
-        <ion-title>Times</ion-title>
+  <ion-page class="teams-page">
+    <ion-header class="">
+      <ion-toolbar class="teams-page__header__toolbar">
+        <ion-title class="teams-page__header__title">Meus times</ion-title>
       </ion-toolbar>
     </ion-header>
     <ion-content>
@@ -145,3 +145,24 @@ export default defineComponent({
   }
 });
 </script>
+
+<style scoped lang="scss">
+.teams-page {
+  &__header {
+    border-bottom-left-radius: 8px;
+
+    &__toolbar {
+      --background: var(--ion-background-color);
+      --color: var(--ion-color-light);
+      height: 80px
+    }
+
+    &__title {
+      font-family: 'Sora';
+      font-size: 24px;
+      font-weight: bold;
+      color: var(--ion-text-color);
+    }
+  }
+}
+</style>
