@@ -144,6 +144,17 @@ ion-chip.warning {
   height: 20px !important;
 }
 
+ion-toolbar ion-tab-bar {
+  ion-tab-button {
+    background-color: var(--ion-background-color-600) !important;
+    
+    &.tab-selected {
+      background-color: var(--ion-background-color-800) !important;
+      box-shadow: inset 0 0 10px var(--ion-text-color) !important;
+    }
+  }
+}
+
 @font-face {
   font-family: 'Sora';
   font-style: normal;
