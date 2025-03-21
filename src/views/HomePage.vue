@@ -50,15 +50,10 @@ export default defineComponent({
   data() {
     return {
       user: {
-        name: 'John Doe',
+        name: 'Rodrigo',
       },
     }
-  },
-  methods: {
-    openMenu() {
-      console.log('Open menu');
-    },
-  },
+  }
 });
 </script>
 
