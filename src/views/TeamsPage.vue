@@ -5,7 +5,7 @@
         <ion-title class="teams-page__header__title">Meus times</ion-title>
       </ion-toolbar>
     </ion-header>
-    <ion-content>
+    <ion-content class="ion-padding">
       <ion-refresher slot="fixed" @ionRefresh="handleRefresh($event)">
         <ion-refresher-content />
       </ion-refresher>
@@ -39,22 +39,19 @@
           </ion-card-header>
         </ion-card>
       </div>
-      <ion-card v-else>
+      <ion-card v-else class="teams-page__empty-card ion-align-items-center">
         <ion-grid>
           <ion-row>
-            <ion-col style="text-align: center;">
-              <ion-icon :icon="alertCircleOutline" style="font-size: 64px;" />
+            <ion-col class="ion-text-center">
+              <ion-icon :icon="alertCircleOutline" style="font-size: 64px;" class="teams-page__empty-card__title" />
               <ion-label>
-                <ion-card-title>
-                  Nenhum time encontrado
+                <ion-card-title class="teams-page__empty-card__title">
+                  Ainda não há times!
                 </ion-card-title>
-                <ion-card-subtitle style="margin-top: 4px;">
-                  Adicione um time para começar
+                <ion-card-subtitle style="margin-top: 4px;" class="teams-page__empty-card__subtitle">
+                  Adicione um para começar
                 </ion-card-subtitle>
               </ion-label>
-              <ion-button style="margin-top: 16px;" @click="openRegisterTeamModal">
-                Adicionar time
-              </ion-button>
             </ion-col>
           </ion-row>
         </ion-grid>
@@ -162,6 +159,25 @@ export default defineComponent({
       font-size: 24px;
       font-weight: bold;
       color: var(--ion-text-color);
+    }
+  }
+
+  &__empty-card {
+    --background: var(--ion-background-item-list);
+    border: 2px solid var(--ion-background-color-800);
+    border-radius: 8px;
+    height: 200px;
+
+    &__title {
+      color: var(--ion-text-color);
+      font-size: 24px;
+      font-weight: 700;
+    }
+
+    &__subtitle {
+      color: var(--ion-text-color-600);
+      font-weight: 700;
+      font-size: 14px;
     }
   }
 }
