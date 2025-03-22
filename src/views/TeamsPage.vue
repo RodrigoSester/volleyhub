@@ -39,7 +39,7 @@
           </ion-card-header>
         </ion-card>
       </div>
-      <ion-card v-else class="teams-page__empty-card ion-align-items-center">
+      <ion-card v-else class="teams-page__empty-card">
         <ion-grid>
           <ion-row>
             <ion-col class="ion-text-center">
@@ -167,6 +167,7 @@ export default defineComponent({
     border: 2px solid var(--ion-background-color-800);
     border-radius: 8px;
     height: 200px;
+    align-content: center;
 
     &__title {
       color: var(--ion-text-color);
