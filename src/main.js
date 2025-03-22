@@ -30,7 +30,6 @@ import {
   IonLabel,
 
   // Tabs components
-  IonTab,
   IonTabs,
   IonTabBar,
   IonTabButton,
@@ -40,7 +39,6 @@ import {
   IonButtons,
   IonButton,
   IonInput,
-  IonInputPasswordToggle,
   IonSelect,
   IonSelectOption,
   
@@ -97,7 +95,7 @@ import '@ionic/vue/css/display.css';
 
 /* @import '@ionic/vue/css/palettes/dark.always.css'; */
 /* @import '@ionic/vue/css/palettes/dark.class.css'; */
-import '@ionic/vue/css/palettes/dark.system.css';
+// import '@ionic/vue/css/palettes/dark.system.css';
 
 /* Theme variables */
 import './theme/variables.css';
@@ -111,7 +109,6 @@ const components = {
   IonTitle,
   IonButtons,
   IonInput,
-  IonInputPasswordToggle,
   IonLabel,
   IonList,
   IonContent,
@@ -124,7 +121,6 @@ const components = {
   IonFooter,
   IonBackButton,
   IonTabs,
-  IonTab,
   IonTabBar,
   IonTabButton,
   IonRouterOutlet,
