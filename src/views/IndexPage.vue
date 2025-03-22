@@ -11,7 +11,7 @@
             class="footer__tab-bar__button"
             v-for="page in appPages" 
             :key="page.id"
-            :tab="page.title"
+            :tab="page.id"
             :href="page.path"
             @click="goToPage(page.path)"
           >
@@ -26,7 +26,7 @@
 
 <script>
 import { defineComponent } from 'vue';
-import { useRoute } from 'vue-router';
+
 import {
   home,
   people,
@@ -38,22 +38,7 @@ export default defineComponent({
   name: 'IndexPage',
   data() {
     return {
-      appPages: [],
-    };
-  },
-  computed: {
-    currentPageTitle() {
-      const route = useRoute();
-      const currentPage = this.appPages.find(page => page.path === route?.path);
-      return currentPage ? currentPage.title : 'App';
-    }
-  },
-  mounted() {
-    this.setPages();
-  },
-  methods: {
-    setPages() {
-      this.appPages = [
+      appPages: [
         {
           id: 'home',
           title: 'Home',
@@ -62,24 +47,26 @@ export default defineComponent({
         },
         {
           id: 'team',
-          title: 'Team',
+          title: 'Times',
           path: '/teams',
           icon: people
         },
         {
           id: 'matches',
-          title: 'Matches',
+          title: 'Calendário',
           path: '/matches',
           icon: calendarOutline
         },
         {
           id: 'profile',
-          title: 'Profile',
+          title: 'Perfil',
           path: '/profile',
           icon: personCircleOutline
         },
-      ]
-    },
+      ],
+    };
+  },
+  methods: {
     goToPage(path) {
       this.$router.push(path);
     }

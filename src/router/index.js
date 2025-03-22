@@ -11,11 +11,13 @@ const routes = [
       {
         meta: { auth: true },
         path: '/home',
+        name: 'home',
         component: () => import ('../views/HomePage.vue'),
       },
       {
         meta: { auth: true },
         path: '/teams',
+        name: 'teams',
         component: () => import ('../views/TeamsPage.vue'),
       },
       // {
