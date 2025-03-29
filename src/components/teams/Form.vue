@@ -3,11 +3,11 @@
     <ion-header class="form__header">
       <ion-toolbar class="form__header__toolbar">
         <ion-row class="ion-justify-content-between">
-          <ion-button class="ion-margin-start form__header__back-button" router-direction="back" @click="close">
+          <ion-button class="ion-margin-start form__header__button" router-direction="back" @click="close">
             <ion-icon slot="icon-only" :icon="arrowBack" />
           </ion-button>
           <ion-title class="form__header__toolbar__title ion-text-center">{{ team.id ? "Editar time" : "Registrar time" }}</ion-title>
-          <ion-button class="ion-margin-end form__header__back-button" @click="save">
+          <ion-button class="ion-margin-end form__header__button" @click="save">
             <ion-icon slot="icon-only" :icon="checkmarkOutline" />
           </ion-button>
         </ion-row>
@@ -84,10 +84,10 @@
               </span>
             </ion-input>
           </ion-col>
-          <ion-col size="12">
+          <!-- <ion-col size="12">
             <ion-label class="form__content__label">Bandeira:*</ion-label>
             <ion-button ref="inputFlagUrl" @click="openGallery" />
-          </ion-col>
+          </ion-col> -->
         </ion-row>
       </ion-grid>
       <ion-fab class="form__content__button" slot="fixed" vertical="bottom" horizontal="end">
@@ -124,7 +124,6 @@ export default defineComponent({
         name: null,
         abbreviation: null,
         modality: null,
-        flagUrl: null,
         monthlyFee: null,
       },
     };
@@ -138,8 +137,7 @@ export default defineComponent({
           name: data.name,
           abbreviation: data.abbreviation,
           modality: data.modality,
-          flagUrl: data.flag_url,
-          monthlyFee: data.monthly_fee,
+          monthlyFee: data.monthlyFee,
         };
       }
     }
@@ -155,10 +153,9 @@ export default defineComponent({
     resetForm() {
       this.team = {
         id: null,
-        name: '',
-        abbreviation: '',
-        modality: '',
-        flagUrl: '',
+        name: null,
+        abbreviation: null,
+        modality: null,
         monthlyFee: null,
       };
     },
@@ -211,7 +208,11 @@ export default defineComponent({
 
       try {
         const body = {
-          ...this.team,
+          name: this.team.name,
+          abbreviation: this.team.abbreviation,
+          modality: this.team.modality,
+          flagUrl: '',
+          monthlyFee: this.team.monthlyFee,
         };
 
         if (this.team.id) {
@@ -250,12 +251,16 @@ export default defineComponent({
       }
     }
 
-    &__back-button {
+    &__button {
       --background: none;
       --box-shadow: none;
       --border-radius: 50%;
       --color: var(--ion-text-base-color);
+      --padding-start: 0 !important;
+      --padding-end: 0 !important;
       font-size: 16px;
+      width: 36px;
+      height: 36px;
     }
   }
 
