@@ -20,7 +20,7 @@
             </ion-row>
           </ion-card-header>
           <ion-card-content class="home__card__content ion-no-padding">
-            <ion-list class="ion-no-padding home__card__content__list">
+            <ion-list lines="full" class="ion-no-padding home__card__content__list">
               <ion-item class="home__card__content__list__item ion-align-items-center ion-justify-content-between">
                 <div>
                   <span>
