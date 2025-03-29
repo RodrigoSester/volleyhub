@@ -7,7 +7,7 @@
             <ion-icon slot="icon-only" :icon="arrowBack" />
           </ion-button>
           <ion-title class="form__header__toolbar__title ion-text-center">{{ team.id ? "Editar time" : "Registrar time" }}</ion-title>
-          <ion-button class="ion-margin-end form__header__button" @click="save">
+          <ion-button class="ion-margin-end form__header__button" @click="handleSave">
             <ion-icon slot="icon-only" :icon="checkmarkOutline" />
           </ion-button>
         </ion-row>
