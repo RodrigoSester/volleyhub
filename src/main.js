@@ -68,6 +68,10 @@ import {
   IonFab,
   IonFabButton,
   IonFabList,
+
+  // Popover component
+  IonPopover,
+  popoverController,
 } from '@ionic/vue';
 
 /* Core CSS required for Ionic components to work properly */
@@ -151,6 +155,8 @@ const components = {
   IonFabList,
   IonSelect,
   IonSelectOption,
+  IonPopover,
+  popoverController,
 };
 
 Object.entries(components).forEach(([name, component]) => {
