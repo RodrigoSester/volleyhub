@@ -1,11 +1,11 @@
 <template>
   <ion-page class="teams-page">
-    <ion-header class="">
+    <ion-header class="teams-page__header">
       <ion-toolbar class="teams-page__header__toolbar">
         <ion-title class="teams-page__header__title">Meus times</ion-title>
       </ion-toolbar>
     </ion-header>
-    <ion-content class="ion-padding">
+    <ion-content>
       <ion-refresher slot="fixed" @ionRefresh="handleRefresh($event)">
         <ion-refresher-content />
       </ion-refresher>
@@ -14,30 +14,45 @@
         <ion-spinner style="height: 64px; width: 64px;" />
       </ion-grid>
       <div v-else-if="teams.length > 0 && !loading">
-        <ion-card
-          v-for="team in teams"
-          :key="team.id"
-          @click="openRegisterTeamModal(team.id)"
-        >
-          <img :src="team.flag_url" alt="Team" style="height: 200px; width: 100%">
-          <ion-card-header style="display: flex; justify-items: center;">
-            <ion-row>
-              <div style="width: 80%;">
-                <ion-card-title>{{ team.name }}</ion-card-title>
-                <ion-card-subtitle>{{ team.modality }}</ion-card-subtitle>
-              </div>
-              <div style="width: 20%;">
-                <ion-button 
-                  shape="round" 
-                  fill="outline"
-                  @click.stop="deleteTeam(team.id)"
-                >
-                  <ion-icon :icon="trashBinOutline" slot="icon-only" />
-                </ion-button>
-              </div>
-            </ion-row>
-          </ion-card-header>
-        </ion-card>
+        <ion-list class="teams-page__list" lines="full">
+          <ion-item class="teams-page__list__header">
+            <ion-label class="teams-page__list__header__label">
+              Time
+            </ion-label>
+            <ion-label class="teams-page__list__header__label">
+              Modalidade
+            </ion-label>
+          </ion-item>
+          <ion-item 
+            class="teams-page__list__item"
+            v-for="team in teams" 
+            :key="team.id"
+          >
+            <ion-label>
+              {{ team.name }}
+            </ion-label>
+            <ion-label>
+              {{ team.modality }}
+            </ion-label>
+            <ion-button slot="end" id="popover-button" fill="clear" class="teams-page__list__item__button">
+              <ion-icon :icon="ellipsisVertical" slot="icon-only" />
+            </ion-button>
+            <ion-popover trigger="popover-button" :dismiss-on-select="true">
+              <ion-content>
+                <ion-list lines="full">
+                  <ion-item class="teams-page__list__item__menu-item" :button="true" @click="openRegisterTeamModal(team.id)">
+                    <ion-icon :icon="pencil" size="small" color="ion-text-color" class="ion-margin-end teams-page__list__item__menu-item__icon" />
+                    Editar
+                  </ion-item>
+                  <ion-item class="teams-page__list__item__menu-item" :button="true" @click="deleteTeam(team.id)">
+                    <ion-icon :icon="trashBinOutline" size="small" class="ion-margin-end teams-page__list__item__menu-item__icon" />
+                    Excluir
+                  </ion-item>
+                </ion-list>
+              </ion-content>
+            </ion-popover>
+          </ion-item>
+        </ion-list>
       </div>
       <ion-card v-else class="teams-page__empty-card">
         <ion-grid>
@@ -73,7 +88,7 @@
 <script>
 import { defineComponent } from 'vue';
 import { axiosInstance } from '../config/axios.config';
-import { add, alertCircleOutline, trashBinOutline } from 'ionicons/icons';
+import { add, alertCircleOutline, trashBinOutline, ellipsisVertical, pencil } from 'ionicons/icons';
 import { showToast } from '../helper/toast.helper';
 import RegisterTeamModal from '../components/teams/Form.vue';
 
@@ -84,9 +99,11 @@ export default defineComponent({
   },
   data() {
     return {
-      alertCircleOutline,
-      trashBinOutline,
       add,
+      pencil,
+      trashBinOutline,
+      ellipsisVertical,
+      alertCircleOutline,
       loading: false,
       loadingDelete: false,
       team: {},
@@ -147,11 +164,15 @@ export default defineComponent({
 .teams-page {
   &__header {
     border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
 
     &__toolbar {
       --background: var(--ion-background-color);
       --color: var(--ion-color-light);
-      height: 80px
+      height: 80px;
+      border-bottom-left-radius: 8px;
+      border-bottom-right-radius: 8px;
+      display: flex;
     }
 
     &__title {
@@ -159,6 +180,40 @@ export default defineComponent({
       font-size: 24px;
       font-weight: bold;
       color: var(--ion-text-color);
+    }
+  }
+
+  &__list {
+    background: none;
+    padding: 0;
+
+    &__header {
+      --background: var(--ion-background-header);
+
+      &__label {
+        color: var(--ion-text-color-600) !important;
+        font-weight: 700;
+      }
+    }
+
+    &__item {
+      --background: var(--ion-background-item-list);
+      --color: var(--ion-text-color);
+      font-weight: 700;
+
+      &__button {
+        color: var(--ion-text-color);
+      }
+
+      &__menu-item {
+        --color: var(--ion-text-color);
+        font-weight: 700;
+        font-size: 14px;
+
+        &__icon {
+          color: var(--ion-text-color);
+        }
+      }
     }
   }
 
