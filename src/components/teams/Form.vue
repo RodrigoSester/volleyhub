@@ -211,7 +211,7 @@ export default defineComponent({
           name: this.team.name,
           abbreviation: this.team.abbreviation,
           modality: this.team.modality,
-          flagUrl: '',
+          flagUrl: 'URL',
           monthlyFee: this.team.monthlyFee,
         };
 
@@ -222,12 +222,12 @@ export default defineComponent({
           await axiosInstance.post('/teams', body);
         }
 
-        showSuccessToast('Conta criada com sucesso!');
+        showSuccessToast('Time criado com sucesso!');
         this.$emit('refresh');
         this.close();
       } catch (error) {
         console.error(error);
-        showErrorToast('Erro ao adicionar time');
+        showErrorToast(error.message);
       } finally {
         this.loading = false;
       }
