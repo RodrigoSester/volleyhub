@@ -7,7 +7,7 @@
     </ion-header>
     <ion-content>
       <ion-refresher slot="fixed" @ionRefresh="handleRefresh($event)">
-        <ion-refresher-content />
+        <ion-refresher-content refreshing-spinner="bubbles" />
       </ion-refresher>
 
       <ion-grid v-if="loading" style="display: flex; align-items: center; justify-content: center; height: 100%;">
