@@ -17,28 +17,38 @@
       <ion-grid>
         <ion-row>
           <ion-col size="12">
-            <ion-label class="form__content__label">Título:</ion-label>
+            <ion-label class="form__content__label">Título:*</ion-label>
             <ion-input
+              ref="inputName"
               v-model="team.name"
               style="margin-top: 4px"
               placeholder="Título do time"
               fill="outline"
+              error-text="Campo obrigatório"
               required
+              @ionBlur="markTouched('inputName')"
+              @input="handleInput('name', $event.target.value)"
             />
           </ion-col>
           <ion-col size="4">
-            <ion-label class="form__content__label">Abreviação:</ion-label>
+            <ion-label class="form__content__label">Abreviação:*</ion-label>
             <ion-input
+              ref="inputAbbreviation"
               v-model="team.abbreviation"
               style="margin-top: 4px"
               placeholder="XXXXX"
               fill="outline"
+              error-text="Campo obrigatório"
+              maxlength="5"
               required
+              @ionBlur="markTouched('inputAbbreviation')"
+              @input="handleInput('abbreviation', $event.target.value)"
             />
           </ion-col>
           <ion-col size="12">
-            <ion-label class="form__content__label">Modalidade:</ion-label>
-            <ion-select 
+            <ion-label class="form__content__label">Modalidade:*</ion-label>
+            <ion-select
+              ref="inputModality"
               v-model="team.modality"
               :disabled="team.id"
               justify="space-between"
@@ -46,6 +56,10 @@
               interface="popover"
               aria-label="Modalidade"
               placeholder="Modalidade"
+              error-text="Campo obrigatório"
+              required
+              @ionBlur="markTouched('inputModality')"
+              @ionChange="handleInput('modality', $event.target.value)"
             >
               <ion-select-option value="male">Masculino</ion-select-option>
               <ion-select-option value="female">Feminino</ion-select-option>
@@ -53,24 +67,26 @@
             </ion-select>
           </ion-col>
           <ion-col size="12">
-            <ion-label class="form__content__label">Mensalidade:</ion-label>
+            <ion-label class="form__content__label">Mensalidade:*</ion-label>
             <ion-input
-              v-model="team.monthly_fee"
+              ref="inputMonthlyFee"
+              v-model="team.monthlyFee"
               style="margin-top: 4px"
               placeholder="R$ 0,00"
               fill="outline"
+              error-text="Campo obrigatório"
               required
-            />
+              @ionBlur="markTouched('inputMonthlyFee')"
+              @input="handleInput('monthlyFee', $event.target.value)"
+            >
+              <span slot="start" aria-hidden="true">
+                R$
+              </span>
+            </ion-input>
           </ion-col>
           <ion-col size="12">
-            <ion-label class="form__content__label">Bandeira:</ion-label>
-            <ion-input
-              v-model="team.flag_url"
-              style="margin-top: 4px"
-              placeholder="Link da imagem"
-              fill="outline"
-              required
-            />
+            <ion-label class="form__content__label">Bandeira:*</ion-label>
+            <ion-button ref="inputFlagUrl" @click="openGallery" />
           </ion-col>
         </ion-row>
       </ion-grid>
@@ -86,8 +102,10 @@
 <script>
 import { defineComponent } from 'vue';
 import { axiosInstance } from '../../config/axios.config';
-import { showToast } from '../../helper/toast.helper';
+import { showErrorToast, showSuccessToast } from '../../helper/toast.helper';
 import { arrowBack, checkmarkOutline } from 'ionicons/icons';
+
+import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 
 export default defineComponent({
   name: 'ModalRegisterTeam',
@@ -103,12 +121,11 @@ export default defineComponent({
       checkmarkOutline,
       isOpen: false,
       team: {
-        id: null,
-        name: '',
-        abbreviation: '',
-        modality: '',
-        flag_url: '',
-        monthly_fee: 0,
+        name: null,
+        abbreviation: null,
+        modality: null,
+        flagUrl: null,
+        monthlyFee: null,
       },
     };
   },
@@ -116,14 +133,13 @@ export default defineComponent({
     dataTeam(value) {
       const data = JSON.parse(JSON.stringify(value));
 
-      if (data) {
+      if (!Object.is(data, {})) {
         this.team = {
-          id: data.id,
           name: data.name,
           abbreviation: data.abbreviation,
           modality: data.modality,
-          flag_url: data.flag_url,
-          monthly_fee: data.monthly_fee,
+          flagUrl: data.flag_url,
+          monthlyFee: data.monthly_fee,
         };
       }
     }
@@ -142,11 +158,55 @@ export default defineComponent({
         name: '',
         abbreviation: '',
         modality: '',
-        flag_url: '',
-        monthly_fee: null,
+        flagUrl: '',
+        monthlyFee: null,
       };
     },
+    markTouched(reference) {
+      this.$refs[reference].$el.classList.add('ion-touched');
+    },
+    getPropertyInputKey(key) {
+      return key.charAt(0).toUpperCase() + key.slice(1)
+    },
+    openGallery () {
+      Camera.getPhoto({
+        quality: 90,
+        allowEditing: true,
+        resultType: CameraResultType.Base64,
+        source: CameraSource.Photos,
+        presentationStyle: 'popover',
+      }).then((image) => {
+        this.team.flagUrl = image.base64String;
+      }).catch((error) => {
+        console.error(error);
+      });
+    },
+    handleInput(key, value) {
+      this.$refs[`input${this.getPropertyInputKey(key)}`].$el.classList.remove('ion-invalid');
+      this.team[key] = value;
+    },
+    validateForm() {
+      for (const teamProperty in this.team) {
+        if (!this.team[teamProperty]) {
+          const inputKey = `input${this.getPropertyInputKey(teamProperty)}`;
+          this.markTouched(inputKey);
+          this.$refs[inputKey].$el.classList.add('ion-invalid');
+        }
+      }
+
+      return (
+        this.team.name &&
+        this.team.abbreviation &&
+        this.team.modality &&
+        this.team.monthlyFee
+      );
+    },
     async handleSave() {
+      if (!this.validateForm()) {
+        showErrorToast('Há erros no preenchimento. Revise os campos e tente novamente.');
+        return;
+      }
+
       this.loading = true;
 
       try {
@@ -161,11 +221,12 @@ export default defineComponent({
           await axiosInstance.post('/teams', body);
         }
 
+        showSuccessToast('Conta criada com sucesso!');
         this.$emit('refresh');
         this.close();
       } catch (error) {
         console.error(error);
-        showToast('Erro ao adicionar time');
+        showErrorToast('Erro ao adicionar time');
       } finally {
         this.loading = false;
       }
