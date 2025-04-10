@@ -109,12 +109,6 @@ import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 
 export default defineComponent({
   name: 'ModalRegisterTeam',
-  props: {
-    dataTeam: {
-      type: Object,
-      default: () => ({}),
-    },
-  },
   data() {
     return {
       arrowBack,
@@ -128,23 +122,13 @@ export default defineComponent({
       },
     };
   },
-  watch: {
-    dataTeam(value) {
-      const data = JSON.parse(JSON.stringify(value));
-
-      if (!Object.is(data, {})) {
-        this.team = {
-          name: data.name,
-          abbreviation: data.abbreviation,
-          modality: data.modality,
-          monthlyFee: data.monthlyFee,
-        };
-      }
-    }
-  },
   methods: {
-    open() {
+    open(teamId) {
       this.isOpen = true;
+
+      if (teamId) {
+        this.fetchTeam(teamId);
+      }
     },
     close() {
       this.resetForm();
@@ -197,6 +181,23 @@ export default defineComponent({
         this.team.modality &&
         this.team.monthlyFee
       );
+    },
+    async fetchTeam(teamId) {
+      try {
+        const response = await axiosInstance.get(`/teams/${teamId}`);
+        const data = response.data.body;
+
+        this.team = {
+          id: data.id,
+          name: data.name,
+          abbreviation: data.abbreviation,
+          modality: data.modality,
+          monthlyFee: data.monthlyFee,
+        };
+      } catch (error) {
+        console.error(error);
+        showErrorToast('Erro ao buscar time');
+      }
     },
     async handleSave() {
       if (!this.validateForm()) {

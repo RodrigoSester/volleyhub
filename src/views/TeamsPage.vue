@@ -7,7 +7,7 @@
     </ion-header>
     <ion-content>
       <ion-refresher slot="fixed" @ionRefresh="handleRefresh($event)">
-        <ion-refresher-content refreshing-spinner="bubbles" />
+        <ion-refresher-content refreshing-spinner="bubbles" class="teams-page__refresher" />
       </ion-refresher>
 
       <ion-grid v-if="loading" style="display: flex; align-items: center; justify-content: center; height: 100%;">
@@ -72,14 +72,13 @@
         </ion-grid>
       </ion-card>
       <ion-fab slot="fixed" vertical="bottom" horizontal="end">
-        <ion-fab-button @click="openRegisterTeamModal">
+        <ion-fab-button @click="openRegisterTeamModal()">
           <ion-icon :icon="add" />
         </ion-fab-button>
       </ion-fab>
     </ion-content>
     <RegisterTeamModal
       ref="registerTeamModal" 
-      :dataTeam="team"
       @refresh="handleRefresh"
     />
   </ion-page>
@@ -115,13 +114,7 @@ export default defineComponent({
   },
   methods: {
     openRegisterTeamModal(teamId = null) {
-      if (teamId) {
-        this.team = this.teams.find((team) => team.id === teamId);
-        this.$refs.registerTeamModal.open();
-        return;
-      }
-
-      this.$refs.registerTeamModal.open();
+      this.$refs.registerTeamModal.open(teamId);
     },
     async handleRefresh(event) {
       await this.fetchUserTeams();
@@ -162,6 +155,10 @@ export default defineComponent({
 
 <style scoped lang="scss">
 .teams-page {
+  &__refresher {
+    color: var(--ion-background-color-800) !important;
+  }
+
   &__header {
     border-bottom-left-radius: 8px;
     border-bottom-right-radius: 8px;
