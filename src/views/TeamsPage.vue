@@ -40,6 +40,10 @@
             <ion-popover trigger="popover-button" :dismiss-on-select="true">
               <ion-content>
                 <ion-list lines="full">
+                  <ion-item class="teams-page__list__item__menu-item" :button="true" @click="openManageTeamModal(team.id)">
+                    <ion-icon :icon="settingsOutline" size="small" color="ion-text-color" class="ion-margin-end teams-page__list__item__menu-item__icon" />
+                      Gerenciar
+                  </ion-item>
                   <ion-item class="teams-page__list__item__menu-item" :button="true" @click="openRegisterTeamModal(team.id)">
                     <ion-icon :icon="pencil" size="small" color="ion-text-color" class="ion-margin-end teams-page__list__item__menu-item__icon" />
                     Editar
@@ -81,25 +85,34 @@
       ref="registerTeamModal" 
       @refresh="handleRefresh"
     />
+    <ManageTeamModal
+      ref="manageTeamModal" 
+      @refresh="handleRefresh"
+    />
   </ion-page>
 </template>
 
 <script>
 import { defineComponent } from 'vue';
+import { add, alertCircleOutline, trashBinOutline, ellipsisVertical, pencil, settingsOutline } from 'ionicons/icons';
+
 import { axiosInstance } from '../config/axios.config';
-import { add, alertCircleOutline, trashBinOutline, ellipsisVertical, pencil } from 'ionicons/icons';
 import { showToast } from '../helper/toast.helper';
+
+import ManageTeamModal from '../components/teams/Manage.vue';
 import RegisterTeamModal from '../components/teams/Form.vue';
 
 export default defineComponent({
   name: 'TeamsPage',
   components: {
-    RegisterTeamModal,
+    ManageTeamModal,
+    RegisterTeamModal
   },
   data() {
     return {
       add,
       pencil,
+      settingsOutline,
       trashBinOutline,
       ellipsisVertical,
       alertCircleOutline,
@@ -115,6 +128,9 @@ export default defineComponent({
   methods: {
     openRegisterTeamModal(teamId = null) {
       this.$refs.registerTeamModal.open(teamId);
+    },
+    openManageTeamModal(teamId) {
+      this.$refs.manageTeamModal.open(teamId);
     },
     async handleRefresh(event) {
       await this.fetchUserTeams();
