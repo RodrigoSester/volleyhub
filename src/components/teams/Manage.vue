@@ -16,16 +16,18 @@
         </ion-row>
       </ion-toolbar>
     </ion-header>
-    <ion-content class="ion-padding">
-      <ion-item>
-        <ion-input
-          label="Enter your name"
-          label-placement="stacked"
-          ref="input"
-          type="text"
-          placeholder="Your name"
-        ></ion-input>
-      </ion-item>
+    <ion-content>
+      <ion-list lines="full">
+        <ion-item v-for="player in team.players" :key="player.id" class="manage-team__content__item">
+          <div>
+            <span></span>
+            <ion-label class="manage-team__content__label">Nome</ion-label>
+          </div>
+          <ion-note slot="end">
+            <ion-chip class="warning">Pendente</ion-chip>
+          </ion-note>
+        </ion-item>
+      </ion-list>
     </ion-content>
   </ion-modal>
 </template>
