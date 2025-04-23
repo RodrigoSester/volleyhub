@@ -11,7 +11,7 @@
             <br>
             <ion-label class="manage-team__header__toolbar__title">{{ team.name }}</ion-label>
             <br>
-            <span class="manage-team__header__toolbar__info">{{ team.createdAt }}</span>
+            <span class="manage-team__header__toolbar__info">{{ formatDate(team.createdAt) }}</span>
           </ion-col>
         </ion-row>
       </ion-toolbar>
@@ -19,13 +19,18 @@
     <ion-content>
       <ion-list lines="full" class="manage-team__content__list">
         <ion-item v-for="player in team.players" :key="player.id" class="manage-team__content__item">
-          <div>
-            <ion-label class="manage-team__content__label">{{ player.name }}</ion-label>
+          <ion-col size="8" class="ion-no-padding ion-align-items-start ion-justify-content-start">
+            <ion-label class="manage-team__content__label ion-text-nowrap">{{ player.name }}</ion-label>
             <span class="manage-team__content__info">Camisa {{ player.shirtNumber }}</span>
-          </div>
-          <ion-note slot="end">
-            <ion-chip color="success">{{ player.isActive }}</ion-chip>
-          </ion-note>
+          </ion-col>
+          <ion-col size="4" class="ion-no-padding manage-team__content__item__info">
+            <ion-note>
+              <ion-chip :class="player.isActive ? 'success' : 'inactive'">{{ player.isActive ? 'Ativo' : 'Inativo' }}</ion-chip>
+            </ion-note>
+          </ion-col>
+           <ion-button slot="end" class="manage-team__content__item__button">
+              <ion-icon slot="icon-only" :icon="ellipsisVertical" />
+           </ion-button>
         </ion-item>
       </ion-list>
     </ion-content>
@@ -33,9 +38,10 @@
 </template>
 
 <script>
-import { pencil, arrowBack } from 'ionicons/icons';
+import { pencil, arrowBack, ellipsisVertical } from 'ionicons/icons';
 import { defineComponent } from 'vue';
 import { axiosInstance } from '../../config/axios.config';
+import moment from 'moment';
 
 export default defineComponent({
   name: 'ManageTeamPage',
@@ -43,6 +49,7 @@ export default defineComponent({
     return {
       pencil,
       arrowBack,
+      ellipsisVertical,
       isOpen: false,
       team: {
         id: null,
@@ -66,6 +73,9 @@ export default defineComponent({
     },
     confirm() {
       this.$refs.modal.dismiss();
+    },
+    formatDate(date) {
+      return moment(date).format('DD/MM/YYYY');
     },
     async fetchTeamData(teamId) {
       try {
@@ -98,8 +108,8 @@ export default defineComponent({
       &__info {
         font-family: 'Sora';
         font-size: 12px;
-        font-weight: 400;
-        color: var(--ion-text-color-400);
+        font-weight: 700;
+        color: var(--ion-text-color-400) !important;
       }
     }
 
@@ -118,11 +128,29 @@ export default defineComponent({
 
   &__content {
     &__list {
-      background: none;
+      background: var(--ion-background-item-list) !important;
     }
 
     &__item {
       --background: var(--ion-background-item-list);
+      padding-bottom: 8px;
+
+      &__info {
+        display: flex;
+        justify-content: center;
+      }
+
+      &__button {
+        --background: none;
+        --box-shadow: none;
+        --border-radius: 50%;
+        --color: var(--ion-text-base-color);
+        --padding-start: 0 !important;
+        --padding-end: 0 !important;
+        font-size: 12px;
+        width: 36px;
+        height: 36px;
+      }
     }
 
     &__label {
