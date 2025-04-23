@@ -1,63 +1,174 @@
 <template>
-  <ion-modal ref="manageTeamModal" trigger="open-manage-team-modal">
-    <ion-header>
-      <ion-toolbar>
-        <ion-buttons slot="start">
-          <ion-button @click="cancel()">Cancelar</ion-button>
-        </ion-buttons>
-        <ion-title>{{ team.name }}</ion-title>
-        <ion-buttons slot="end">
-          <ion-button :strong="true" @click="confirm()">
-            <ion-icon :icon="pencil" />
+  <ion-modal ref="manageTeamModal" :is-open="isOpen" class="manage-team">
+     <ion-header class="manage-team__header">
+      <ion-toolbar class="manage-team__header__toolbar">
+        <ion-row class="ion-justify-content-between ion-align-items-center manage-team__header">
+          <ion-button class="ion-margin-start manage-team__header__button" router-direction="back" @click="close">
+            <ion-icon slot="icon-only" :icon="arrowBack" />
           </ion-button>
-        </ion-buttons>
+          <ion-col cols="8" class="d-flex ion-align-items-start ion-justify-content-center">
+            <span class="manage-team__header__toolbar__info">{{ team.modality }}</span>
+            <br>
+            <ion-label class="manage-team__header__toolbar__title">{{ team.name }}</ion-label>
+            <br>
+            <span class="manage-team__header__toolbar__info">{{ formatDate(team.createdAt) }}</span>
+          </ion-col>
+        </ion-row>
       </ion-toolbar>
     </ion-header>
-    <ion-content class="ion-padding">
-      <ion-item>
-        <ion-input
-          label="Enter your name"
-          label-placement="stacked"
-          ref="input"
-          type="text"
-          placeholder="Your name"
-        ></ion-input>
-      </ion-item>
+    <ion-content>
+      <ion-list lines="full" class="manage-team__content__list">
+        <ion-item v-for="player in team.players" :key="player.id" class="manage-team__content__item">
+          <ion-col size="8" class="ion-no-padding ion-align-items-start ion-justify-content-start">
+            <ion-label class="manage-team__content__label ion-text-nowrap">{{ player.name }}</ion-label>
+            <span class="manage-team__content__info">Camisa {{ player.shirtNumber }}</span>
+          </ion-col>
+          <ion-col size="4" class="ion-no-padding manage-team__content__item__info">
+            <ion-note>
+              <ion-chip :class="player.isActive ? 'success' : 'inactive'">{{ player.isActive ? 'Ativo' : 'Inativo' }}</ion-chip>
+            </ion-note>
+          </ion-col>
+           <ion-button slot="end" class="manage-team__content__item__button">
+              <ion-icon slot="icon-only" :icon="ellipsisVertical" />
+           </ion-button>
+        </ion-item>
+      </ion-list>
     </ion-content>
   </ion-modal>
 </template>
 
 <script>
-import { pencil } from 'ionicons/icons';
+import { pencil, arrowBack, ellipsisVertical } from 'ionicons/icons';
 import { defineComponent } from 'vue';
+import { axiosInstance } from '../../config/axios.config';
+import moment from 'moment';
 
 export default defineComponent({
   name: 'ManageTeamPage',
-  props: {
-    teamId: String,
-  },
   data() {
     return {
       pencil,
+      arrowBack,
+      ellipsisVertical,
+      isOpen: false,
       team: {
-        name: 'Weber teams',
-        description: '',
+        id: null,
+        name: null,
+        abbreviation: null,
+        modality: null,
+        monthlyFee: null,
+        flagUrl: null,
+        createdAt: null,
       },
     };
   },
-  created() {
-    console.log(this.teamId);
-  },
   methods: {
-    open() {
+    open(teamId) {
       this.isOpen = true;
+
+      this.fetchTeamData(teamId);
     },
-    cancel() {
+    close() {
       this.isOpen = false;
     },
     confirm() {
       this.$refs.modal.dismiss();
     },
+    formatDate(date) {
+      return moment(date).format('DD/MM/YYYY');
+    },
+    async fetchTeamData(teamId) {
+      try {
+        const response = await axiosInstance.get(`/teams/${teamId}`);
+        this.team = response.data.body;
+      } catch (error) {
+        console.error('Error fetching team data:', error);
+      }
+    },
   }
 });
 </script>
+
+<style scoped lang="scss">
+.manage-team {
+   &__header {
+    height: 90px;
+
+    &__toolbar {
+      --background: var(--ion-background-color);
+      display: flex;
+
+      &__title {
+        font-family: 'Sora';
+        font-size: 14px;
+        font-weight: 700;
+        color: var(--ion-text-color);
+      }
+
+      &__info {
+        font-family: 'Sora';
+        font-size: 12px;
+        font-weight: 700;
+        color: var(--ion-text-color-400) !important;
+      }
+    }
+
+    &__button {
+      --background: none;
+      --box-shadow: none;
+      --border-radius: 50%;
+      --color: var(--ion-text-base-color);
+      --padding-start: 0 !important;
+      --padding-end: 0 !important;
+      font-size: 16px;
+      width: 36px;
+      height: 36px;
+    }
+  }
+
+  &__content {
+    &__list {
+      background: var(--ion-background-item-list) !important;
+    }
+
+    &__item {
+      --background: var(--ion-background-item-list);
+      padding-bottom: 8px;
+
+      &__info {
+        display: flex;
+        justify-content: center;
+      }
+
+      &__button {
+        --background: none;
+        --box-shadow: none;
+        --border-radius: 50%;
+        --color: var(--ion-text-base-color);
+        --padding-start: 0 !important;
+        --padding-end: 0 !important;
+        font-size: 12px;
+        width: 36px;
+        height: 36px;
+      }
+    }
+
+    &__label {
+      font-family: 'Sora';
+      font-weight: 700;
+    }
+
+    &__info {
+      font-family: 'Sora';
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--ion-text-color-400) !important;
+    }
+
+    &__button {
+      right: 32px;
+      bottom: 40px;
+    }
+  }
+}
+</style>

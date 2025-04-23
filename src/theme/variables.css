@@ -8,6 +8,7 @@ http://ionicframework.com/docs/theming/ */
   --ion-background-color: #fdebe0 !important;
   --ion-background-color-400: #f2f1e6 !important;
   --ion-background-color-600: #c1d4c5 !important;
+  --ion-background-color-700: #e2f9af !important;
   --ion-background-color-800: #84a98b !important;
 
   --ion-background-header: #fbd7c1 !important;
@@ -136,14 +137,38 @@ ion-loading {
   }
 }
 
+/* CHIP */
 ion-chip.warning {
   --background: #ffee99 !important;
   --color: #b78300 !important;
   border: 2px solid #ffe266;
   border-radius: 4px;
   height: 20px !important;
+
+  font-weight: 600 !important;
 }
 
+ion-chip.success {
+  --background: var(--ion-background-color-700) !important;
+  --color: var(--ion-text-green-color) !important;
+  border: 2px solid var(--ion-background-color-800) !important;
+  border-radius: 4px;
+  height: 20px !important;
+
+  font-weight: 600 !important;
+}
+
+ion-chip.inactive {
+  --background: #dedede !important;
+  --color: var(--ion-text-color-600) !important;
+  border: 2px solid var(--ion-text-color-400) !important;
+  border-radius: 4px;
+  height: 20px !important;
+
+  font-weight: 600 !important;
+}
+
+/* TOOLBAR */
 ion-toolbar ion-tab-bar {
   ion-tab-button {
     background-color: var(--ion-background-color-600) !important;
