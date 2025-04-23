@@ -17,14 +17,14 @@
       </ion-toolbar>
     </ion-header>
     <ion-content>
-      <ion-list lines="full">
+      <ion-list lines="full" class="manage-team__content__list">
         <ion-item v-for="player in team.players" :key="player.id" class="manage-team__content__item">
           <div>
-            <span></span>
-            <ion-label class="manage-team__content__label">Nome</ion-label>
+            <ion-label class="manage-team__content__label">{{ player.name }}</ion-label>
+            <span class="manage-team__content__info">Camisa {{ player.shirtNumber }}</span>
           </div>
           <ion-note slot="end">
-            <ion-chip class="warning">Pendente</ion-chip>
+            <ion-chip color="success">{{ player.isActive }}</ion-chip>
           </ion-note>
         </ion-item>
       </ion-list>
@@ -117,9 +117,24 @@ export default defineComponent({
   }
 
   &__content {
+    &__list {
+      background: none;
+    }
+
+    &__item {
+      --background: var(--ion-background-item-list);
+    }
+
     &__label {
       font-family: 'Sora';
       font-weight: 700;
+    }
+
+    &__info {
+      font-family: 'Sora';
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--ion-text-color-400) !important;
     }
 
     &__button {
