@@ -33,12 +33,27 @@
            </ion-button>
         </ion-item>
       </ion-list>
+      <ion-fab slot="fixed" vertical="bottom" horizontal="end" class="manage-team__content__button">
+        <ion-fab-button>
+          <ion-icon :icon="arrowUp" />
+        </ion-fab-button>
+        <ion-fab-list side="top" class="manage-team__content__button__list">
+          <button class="manage-team__content__button__list__item ion-align-items-center ion-justify-content-between ion-padding-horizontal">
+            <ion-label class="manage-team__content__button__list__item__label">Convidar jogador</ion-label>
+            <ion-icon :icon="personAdd" class="manage-team__content__button__list__item__icon" />
+          </button>
+          <button class="manage-team__content__button__list__item ion-align-items-center ion-justify-content-between ion-padding-horizontal">
+            <ion-label class="manage-team__content__button__list__item__label">Adicionar partida</ion-label>
+            <ion-icon :icon="basketball" class="manage-team__content__button__list__item__icon" />
+          </button>
+        </ion-fab-list>
+      </ion-fab>
     </ion-content>
   </ion-modal>
 </template>
 
 <script>
-import { pencil, arrowBack, ellipsisVertical } from 'ionicons/icons';
+import { pencil, arrowBack, ellipsisVertical, checkmarkOutline, personAdd, basketball, arrowUp } from 'ionicons/icons';
 import { defineComponent } from 'vue';
 import { axiosInstance } from '../../config/axios.config';
 import moment from 'moment';
@@ -48,7 +63,11 @@ export default defineComponent({
   data() {
     return {
       pencil,
+      arrowUp,
       arrowBack,
+      personAdd,
+      basketball,
+      checkmarkOutline,
       ellipsisVertical,
       isOpen: false,
       team: {
@@ -168,6 +187,32 @@ export default defineComponent({
     &__button {
       right: 32px;
       bottom: 40px;
+
+      &__list {
+        width: -webkit-fill-available;
+
+        &__item {
+          width: 200px;
+          height: 32px;
+          display: flex;
+          margin-right: 100px;
+          margin-bottom: 8px;
+          background: var(--ion-text-green-color-600) !important;
+          border: 2px solid var(--ion-text-green-color);
+          border-radius: 8px !important;
+
+          &__label {
+            font-weight: 700;
+            font-size: 14px;
+          }
+
+          &__icon {
+            width: 16px;
+            height: 16px;
+            color: var(--ion-text-color) !important;
+          }
+        }
+      }
     }
   }
 }
