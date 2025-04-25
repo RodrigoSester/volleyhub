@@ -38,7 +38,10 @@
           <ion-icon :icon="arrowUp" />
         </ion-fab-button>
         <ion-fab-list side="top" class="manage-team__content__button__list">
-          <button class="manage-team__content__button__list__item ion-align-items-center ion-justify-content-between ion-padding-horizontal">
+          <button 
+            class="manage-team__content__button__list__item ion-align-items-center ion-justify-content-between ion-padding-horizontal"
+            @click="invitePlayer()"
+          >
             <ion-label class="manage-team__content__button__list__item__label">Convidar jogador</ion-label>
             <ion-icon :icon="personAdd" class="manage-team__content__button__list__item__icon" />
           </button>
@@ -49,6 +52,12 @@
         </ion-fab-list>
       </ion-fab>
     </ion-content>
+
+    <InvitePlayerModal
+      :open="isOpenInvitePlayerModal"
+      :teamId="team.id"
+      @close="isOpenInvitePlayerModal = false"
+    />
   </ion-modal>
 </template>
 
@@ -57,9 +66,13 @@ import { pencil, arrowBack, ellipsisVertical, checkmarkOutline, personAdd, baske
 import { defineComponent } from 'vue';
 import { axiosInstance } from '../../config/axios.config';
 import moment from 'moment';
+import InvitePlayerModal from './InvitePlayer.vue';
 
 export default defineComponent({
   name: 'ManageTeamPage',
+  components: {
+    InvitePlayerModal,
+  },
   data() {
     return {
       pencil,
@@ -70,6 +83,7 @@ export default defineComponent({
       checkmarkOutline,
       ellipsisVertical,
       isOpen: false,
+      isOpenInvitePlayerModal: false,
       team: {
         id: null,
         name: null,
@@ -95,6 +109,9 @@ export default defineComponent({
     },
     formatDate(date) {
       return moment(date).format('DD/MM/YYYY');
+    },
+    invitePlayer() {
+      this.isOpenInvitePlayerModal = true;
     },
     async fetchTeamData(teamId) {
       try {

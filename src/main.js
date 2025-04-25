@@ -2,7 +2,7 @@ import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router';
 
-import { 
+import {
   // Core components
   IonicVue, 
   IonPage,
@@ -15,8 +15,11 @@ import {
   IonFooter,
   IonTitle,
   IonBackButton,
+  IonChip,
+  IonNote,
 
   IonActionSheet,
+  IonAlert,
   
   // Item components
   IonItem,
@@ -157,6 +160,9 @@ const components = {
   IonSelectOption,
   IonPopover,
   popoverController,
+  IonAlert,
+  IonChip,
+  IonNote,
 };
 
 Object.entries(components).forEach(([name, component]) => {
