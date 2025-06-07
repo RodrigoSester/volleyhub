@@ -75,10 +75,23 @@
           </ion-row>
         </ion-grid>
       </ion-card>
-      <ion-fab slot="fixed" vertical="bottom" horizontal="end">
-        <ion-fab-button @click="openRegisterTeamModal()">
+      <ion-fab slot="fixed" vertical="bottom" horizontal="end" class="teams-page__list__button">
+        <ion-fab-button>
           <ion-icon :icon="add" />
         </ion-fab-button>
+        <ion-fab-list side="top" class="teams-page__list__button__list">
+          <button
+            id="open-modal-use-link"
+            class="teams-page__list__button__list__item ion-align-items-center ion-justify-content-between ion-padding-horizontal"
+          >
+            <ion-label class="teams-page__list__button__list__item__label">Link de convite</ion-label>
+            <ion-icon :icon="link" class="teams-page__list__button__list__item__icon" />
+          </button>
+          <button class="teams-page__list__button__list__item ion-align-items-center ion-justify-content-between ion-padding-horizontal" @click="openRegisterTeamModal()">
+            <ion-label class="teams-page__list__button__list__item__label">Criar time</ion-label>
+            <ion-icon :icon="flag" class="teams-page__list__button__list__item__icon" />
+          </button>
+        </ion-fab-list>
       </ion-fab>
     </ion-content>
     <RegisterTeamModal
@@ -94,7 +107,7 @@
 
 <script>
 import { defineComponent } from 'vue';
-import { add, alertCircleOutline, trashBinOutline, ellipsisVertical, pencil, settingsOutline } from 'ionicons/icons';
+import { add, alertCircleOutline, trashBinOutline, ellipsisVertical, pencil, settingsOutline, link, flag } from 'ionicons/icons';
 
 import { axiosInstance } from '../config/axios.config';
 import { showToast } from '../helper/toast.helper';
@@ -116,6 +129,8 @@ export default defineComponent({
       trashBinOutline,
       ellipsisVertical,
       alertCircleOutline,
+      link,
+      flag,
       loading: false,
       loadingDelete: false,
       team: {},
@@ -147,7 +162,7 @@ export default defineComponent({
   
         const data = response.data.body;
         this.teams = data;
-      } catch (error) {
+      } catch {
         showToast('Erro ao buscar times');
       } finally {
         this.loading = false;
@@ -159,7 +174,7 @@ export default defineComponent({
       try {
         await axiosInstance.delete(`/teams/${teamId}`);
         this.fetchUserTeams();
-      } catch (error) {
+      } catch {
         showToast('Erro ao deletar time');
       } finally {
         this.loadingDelete = false;
@@ -225,6 +240,36 @@ export default defineComponent({
 
         &__icon {
           color: var(--ion-text-color);
+        }
+      }
+    }
+
+    &__button {
+      right: 32px;
+      bottom: 40px;
+
+      &__list {
+        right: 0;
+
+        &__item {
+          width: 200px;
+          height: 32px;
+          display: flex;
+          margin-bottom: 8px;
+          background: var(--ion-text-green-color-600) !important;
+          border: 2px solid var(--ion-text-green-color);
+          border-radius: 8px !important;
+
+          &__label {
+            font-weight: 700;
+            font-size: 14px;
+          }
+
+          &__icon {
+            width: 16px;
+            height: 16px;
+            color: var(--ion-text-color) !important;
+          }
         }
       }
     }
