@@ -1,7 +1,6 @@
 import axios from "axios";
 import storageConfig from "./storage.config";
 import { jwtDecode } from 'jwt-decode';
-import { environment } from "../../environment.development";
 
 storageConfig.create();
 
@@ -49,7 +48,7 @@ const customAxios = () => {
       Accept         : 'application/json',
       'Content-Type' : 'application/json',
     },
-    baseURL          : environment.apiUrl,
+    baseURL          : import.meta.env.VITE_API_URL,
   });
 
   instance.interceptors.request.use(request => _requestHandler(request));
