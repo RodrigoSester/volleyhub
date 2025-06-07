@@ -38,7 +38,8 @@
           <ion-icon :icon="arrowUp" />
         </ion-fab-button>
         <ion-fab-list side="top" class="manage-team__content__button__list">
-          <button 
+          <button
+            id="open-modal"
             class="manage-team__content__button__list__item ion-align-items-center ion-justify-content-between ion-padding-horizontal"
             @click="invitePlayer()"
           >
@@ -53,11 +54,7 @@
       </ion-fab>
     </ion-content>
 
-    <InvitePlayerModal
-      :open="isOpenInvitePlayerModal"
-      :teamId="team.id"
-      @close="isOpenInvitePlayerModal = false"
-    />
+    <InvitePlayerModal :teamId="team.id" />
   </ion-modal>
 </template>
 
@@ -67,6 +64,7 @@ import { defineComponent } from 'vue';
 import { axiosInstance } from '../../config/axios.config';
 import moment from 'moment';
 import InvitePlayerModal from './InvitePlayer.vue';
+import { showErrorToast } from '../../helper/toast.helper';
 
 export default defineComponent({
   name: 'ManageTeamPage',
@@ -117,8 +115,8 @@ export default defineComponent({
       try {
         const response = await axiosInstance.get(`/teams/${teamId}`);
         this.team = response.data.body;
-      } catch (error) {
-        console.error('Error fetching team data:', error);
+      } catch {
+        showErrorToast('Erro ao buscar dados do time');
       }
     },
   }
