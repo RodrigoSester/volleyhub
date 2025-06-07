@@ -1,5 +1,5 @@
 <template>
-  <ion-modal trigger="open-modal" class="block invite-player" :initial-breakpoint="1" :breakpoints="[0, 1]">
+  <ion-modal trigger="open-modal-invite-link" class="block invite-player" :initial-breakpoint="1" :breakpoints="[0, 1]">
     <div class="invite-player__content ion-padding">
       <h2 class="invite-player__content__header">
         Convidar Jogador

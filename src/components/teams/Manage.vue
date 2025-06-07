@@ -39,9 +39,8 @@
         </ion-fab-button>
         <ion-fab-list side="top" class="manage-team__content__button__list">
           <button
-            id="open-modal"
+            id="open-modal-invite-link"
             class="manage-team__content__button__list__item ion-align-items-center ion-justify-content-between ion-padding-horizontal"
-            @click="invitePlayer()"
           >
             <ion-label class="manage-team__content__button__list__item__label">Convidar jogador</ion-label>
             <ion-icon :icon="personAdd" class="manage-team__content__button__list__item__icon" />
@@ -107,9 +106,6 @@ export default defineComponent({
     },
     formatDate(date) {
       return moment(date).format('DD/MM/YYYY');
-    },
-    invitePlayer() {
-      this.isOpenInvitePlayerModal = true;
     },
     async fetchTeamData(teamId) {
       try {
