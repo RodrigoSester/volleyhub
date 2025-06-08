@@ -102,6 +102,7 @@
       ref="manageTeamModal" 
       @refresh="handleRefresh"
     />
+    <Invitelink />
   </ion-page>
 </template>
 
@@ -114,10 +115,12 @@ import { showToast } from '../helper/toast.helper';
 
 import ManageTeamModal from '../components/teams/Manage.vue';
 import RegisterTeamModal from '../components/teams/Form.vue';
+import Invitelink from '../components/teams/InviteLink.vue';
 
 export default defineComponent({
   name: 'TeamsPage',
   components: {
+    Invitelink,
     ManageTeamModal,
     RegisterTeamModal
   },
