@@ -45,7 +45,10 @@
             <ion-label class="manage-team__content__button__list__item__label">Convidar jogador</ion-label>
             <ion-icon :icon="personAdd" class="manage-team__content__button__list__item__icon" />
           </button>
-          <button class="manage-team__content__button__list__item ion-align-items-center ion-justify-content-between ion-padding-horizontal">
+          <button
+            class="manage-team__content__button__list__item ion-align-items-center ion-justify-content-between ion-padding-horizontal"
+            @click="isOpenRegisterMatch = true"
+          >
             <ion-label class="manage-team__content__button__list__item__label">Adicionar partida</ion-label>
             <ion-icon :icon="basketball" class="manage-team__content__button__list__item__icon" />
           </button>
@@ -54,6 +57,7 @@
     </ion-content>
 
     <InvitePlayerModal :teamId="team.id" />
+    <RegisterMatch :open="isOpenRegisterMatch" @close="isOpenRegisterMatch = false" />
   </ion-modal>
 </template>
 
@@ -63,12 +67,14 @@ import { defineComponent } from 'vue';
 import { axiosInstance } from '../../config/axios.config';
 import moment from 'moment';
 import InvitePlayerModal from './InvitePlayer.vue';
+import RegisterMatch from '../matches/Register.vue';
 import { showErrorToast } from '../../helper/toast.helper';
 
 export default defineComponent({
   name: 'ManageTeamPage',
   components: {
     InvitePlayerModal,
+    RegisterMatch,
   },
   data() {
     return {
@@ -80,7 +86,7 @@ export default defineComponent({
       checkmarkOutline,
       ellipsisVertical,
       isOpen: false,
-      isOpenInvitePlayerModal: false,
+      isOpenRegisterMatch: false,
       team: {
         id: null,
         name: null,
