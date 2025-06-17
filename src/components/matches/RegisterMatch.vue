@@ -44,12 +44,12 @@
               ref="inputValue"
               v-model="match.value"
               style="margin-top: 4px"
-              placeholder="R$ 0,00"
+              placeholder="0,00"
               fill="outline"
-              error-text="Campo obrigatório"
+              :error-text="valueErrorText"
               required
               @ionBlur="markTouched('inputValue')"
-              @input="handleInput('value', $event.target.value)"
+              @input="handleValueInput($event.target.value)"
             >
               <span slot="start" aria-hidden="true">
                 R$
@@ -65,15 +65,15 @@
               style="margin-top: 4px"
               type="datetime-local"
               fill="outline"
-              error-text="Campo obrigatório"
+              :error-text="dateTimeErrorText"
               required
               @ionBlur="markTouched('inputDateTime')"
-              @input="handleInput('dateTime', $event.target.value)"
+              @input="handleDateTimeInput($event.target.value)"
             />
           </ion-col>
 
           <ion-col size="12">
-            <ion-label class="form-match__content__label">Time:</ion-label>
+            <ion-label class="form-match__content__label">Time adversário:</ion-label>
             <ion-select
               ref="inputTeam"
               v-model="match.teamId"
@@ -81,7 +81,7 @@
               fill="outline"
               interface="popover"
               aria-label="Time"
-              placeholder="Selecione um time (opcional)"
+              placeholder="Selecione o time adversário"
               @ionChange="handleInput('teamId', $event.target.value)"
             >
               <ion-select-option v-for="team in teams" :key="team.id" :value="team.id">
@@ -119,6 +119,8 @@ export default {
       arrowBack,
       checkmarkOutline,
       teams: [],
+      valueErrorText: 'Campo obrigatório',
+      dateTimeErrorText: 'Campo obrigatório',
       match: {
         modality: '',
         value: '',
@@ -141,6 +143,97 @@ export default {
     getPropertyInputKey(key) {
       return key.charAt(0).toUpperCase() + key.slice(1)
     },
+    formatValue(value) {
+      const numbers = value.replace(/\D/g, '');
+      
+      if (!numbers) return '';
+
+      const cents = parseInt(numbers);
+      
+      const formatted = (cents / 100).toLocaleString('pt-BR', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      });
+      
+      return formatted;
+    },
+    
+    validateValue(value) {
+      if (!value) {
+        this.valueErrorText = 'Campo obrigatório';
+        return false;
+      }
+      
+      const numericValue = parseFloat(value.replace(/\./g, '').replace(',', '.'));
+      
+      if (isNaN(numericValue) || numericValue <= 0) {
+        this.valueErrorText = 'Valor deve ser um número válido maior que zero';
+        return false;
+      }
+      
+      this.valueErrorText = '';
+      return true;
+    },
+    
+    validateDateTime(dateTime) {
+      if (!dateTime) {
+        this.dateTimeErrorText = 'Campo obrigatório';
+        return false;
+      }
+      
+      const selectedDate = new Date(dateTime);
+      const now = new Date();
+      const twoYearsFromNow = new Date();
+      twoYearsFromNow.setFullYear(now.getFullYear() + 2);
+      
+      now.setSeconds(0, 0);
+      selectedDate.setSeconds(0, 0);
+      
+      if (isNaN(selectedDate.getTime())) {
+        this.dateTimeErrorText = 'Data e horário inválidos';
+        return false;
+      }
+      
+      if (selectedDate <= now) {
+        this.dateTimeErrorText = 'Data deve ser posterior ao momento atual';
+        return false;
+      }
+      
+      if (selectedDate > twoYearsFromNow) {
+        this.dateTimeErrorText = 'Data não pode ser superior a 2 anos';
+        return false;
+      }
+      
+      this.dateTimeErrorText = '';
+      return true;
+    },
+    
+    handleValueInput(value) {
+      const formattedValue = this.formatValue(value);
+      this.match.value = formattedValue;
+      
+      const isValid = this.validateValue(formattedValue);
+      const inputEl = this.$refs.inputValue.$el;
+      
+      if (isValid) {
+        inputEl.classList.remove('ion-invalid');
+      } else {
+        inputEl.classList.add('ion-invalid');
+      }
+    },
+    
+    handleDateTimeInput(value) {
+      this.match.dateTime = value;
+      
+      const isValid = this.validateDateTime(value);
+      const inputEl = this.$refs.inputDateTime.$el;
+      
+      if (isValid) {
+        inputEl.classList.remove('ion-invalid');
+      } else {
+        inputEl.classList.add('ion-invalid');
+      }
+    },
     handleInput(key, value) {
       if (this.$refs[`input${this.getPropertyInputKey(key)}`]) {
         this.$refs[`input${this.getPropertyInputKey(key)}`].$el.classList.remove('ion-invalid');
@@ -157,21 +250,26 @@ export default {
       }
     },
     validateForm() {
-      const requiredFields = ['modality', 'value', 'dateTime'];
-      let isValid = true;
-
-      for (const field of requiredFields) {
-        if (!this.match[field]) {
-          const inputKey = `input${this.getPropertyInputKey(field)}`;
-          this.markTouched(inputKey);
-          if (this.$refs[inputKey]) {
-            this.$refs[inputKey].$el.classList.add('ion-invalid');
-          }
-          isValid = false;
-        }
+      const modalityValid = !!this.match.modality;
+      const valueValid = this.validateValue(this.match.value);
+      const dateTimeValid = this.validateDateTime(this.match.dateTime);
+      
+      if (!modalityValid) {
+        this.markTouched('inputModality');
+        this.$refs.inputModality.$el.classList.add('ion-invalid');
       }
-
-      return isValid;
+      
+      if (!valueValid) {
+        this.markTouched('inputValue');
+        this.$refs.inputValue.$el.classList.add('ion-invalid');
+      }
+      
+      if (!dateTimeValid) {
+        this.markTouched('inputDateTime');
+        this.$refs.inputDateTime.$el.classList.add('ion-invalid');
+      }
+      
+      return modalityValid && valueValid && dateTimeValid;
     },
     async handleSave() {
       if (!this.validateForm()) {
@@ -180,9 +278,11 @@ export default {
       }
 
       try {
+        const numericValue = parseFloat(this.match.value.replace(/\./g, '').replace(',', '.'));
+        
         const body = {
           modality: this.match.modality,
-          value: this.match.value,
+          value: numericValue,
           dateTime: this.match.dateTime,
           teamId: this.match.teamId,
         };
@@ -203,6 +303,8 @@ export default {
         dateTime: '',
         teamId: null,
       };
+      this.valueErrorText = 'Campo obrigatório';
+      this.dateTimeErrorText = 'Campo obrigatório';
     },
   }
 }
