@@ -67,7 +67,7 @@ import { defineComponent } from 'vue';
 import { axiosInstance } from '../../config/axios.config';
 import moment from 'moment';
 import InvitePlayerModal from './InvitePlayer.vue';
-import RegisterMatch from '../matches/Register.vue';
+import RegisterMatch from '../matches/RegisterMatch.vue';
 import { showErrorToast } from '../../helper/toast.helper';
 
 export default defineComponent({
