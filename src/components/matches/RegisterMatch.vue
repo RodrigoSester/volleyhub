@@ -242,7 +242,7 @@ export default {
     },
     async fetchTeams() {
       try {
-        const response = await axiosInstance.get('/teams');
+        const response = await axiosInstance.get('/teams/not-member');
         this.teams = response.data.body || response.data;
       } catch (error) {
         console.error(error);
