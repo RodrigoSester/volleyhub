@@ -18,6 +18,27 @@
       <ion-grid>
         <ion-row>
           <ion-col size="12">
+            <ion-label class="form-match__content__label">Tipo da partida:*</ion-label>
+            <ion-select
+              ref="inputType"
+              v-model="match.type"
+              justify="space-between"
+              fill="outline"
+              interface="popover"
+              aria-label="Tipo da partida"
+              placeholder="Tipo da partida"
+              error-text="Campo obrigatório"
+              required
+              @ionBlur="markTouched('inputType')"
+              @ionChange="handleInput('type', $event.target.value)"
+            >
+              <ion-select-option value="training">Treino</ion-select-option>
+              <ion-select-option value="friendly_match">Amistoso</ion-select-option>
+              <ion-select-option value="leisure">Lazer</ion-select-option>
+            </ion-select>
+          </ion-col>
+
+          <ion-col size="12">
             <ion-label class="form-match__content__label">Modalidade:*</ion-label>
             <ion-select
               ref="inputModality"
@@ -38,7 +59,7 @@
             </ion-select>
           </ion-col>
 
-          <ion-col size="12">
+          <ion-col v-if="match.type !== 'training'" size="12">
             <ion-label class="form-match__content__label">Valor:*</ion-label>
             <ion-input
               ref="inputValue"
@@ -55,9 +76,7 @@
                 R$
               </span>
             </ion-input>
-          </ion-col>
-
-          <ion-col size="12">
+          </ion-col>          <ion-col size="12">
             <ion-label class="form-match__content__label">Data e Horário:*</ion-label>
             <ion-input
               ref="inputDateTime"
@@ -73,6 +92,21 @@
           </ion-col>
 
           <ion-col size="12">
+            <ion-label class="form-match__content__label">Endereço do ginásio:*</ion-label>
+            <ion-input
+              ref="inputGymAddress"
+              v-model="match.gymAddress"
+              style="margin-top: 4px"
+              placeholder="Endereço do ginásio"
+              fill="outline"
+              error-text="Campo obrigatório"
+              required
+              @ionBlur="markTouched('inputGymAddress')"
+              @input="handleInput('gymAddress', $event.target.value)"
+            />
+          </ion-col>
+
+          <ion-col v-if="match.type === 'friendly_match'" size="12">
             <ion-label class="form-match__content__label">Time adversário:</ion-label>
             <ion-select
               ref="inputTeam"
@@ -113,6 +147,10 @@ export default {
       type: Boolean,
       default: false,
     },
+    teamId: {
+      type: Number,
+      default: null,
+    }
   },
   data() {
     return {
@@ -123,9 +161,10 @@ export default {
       dateTimeErrorText: 'Campo obrigatório',
       match: {
         modality: '',
+        type: '',
         value: '',
         dateTime: '',
-        teamId: null,
+        gymAddress: '',
       },
     };
   },
@@ -251,15 +290,23 @@ export default {
     },
     validateForm() {
       const modalityValid = !!this.match.modality;
+      const typeValid = !!this.match.type;
       const valueValid = this.validateValue(this.match.value);
       const dateTimeValid = this.validateDateTime(this.match.dateTime);
+      const gymAddressValid = !!this.match.gymAddress;
       
+      console.log("🚀 ~ validateForm ~ this.$refs:", this.$refs);
       if (!modalityValid) {
         this.markTouched('inputModality');
         this.$refs.inputModality.$el.classList.add('ion-invalid');
       }
       
-      if (!valueValid) {
+      if (!typeValid) {
+        this.markTouched('inputType');
+        this.$refs.inputType.$el.classList.add('ion-invalid');
+      }
+      
+      if (!valueValid && this.match.type !== 'training') {
         this.markTouched('inputValue');
         this.$refs.inputValue.$el.classList.add('ion-invalid');
       }
@@ -269,7 +316,12 @@ export default {
         this.$refs.inputDateTime.$el.classList.add('ion-invalid');
       }
       
-      return modalityValid && valueValid && dateTimeValid;
+      if (!gymAddressValid) {
+        this.markTouched('inputGymAddress');
+        this.$refs.inputGymAddress.$el.classList.add('ion-invalid');
+      }
+      
+      return modalityValid && typeValid && (valueValid || this.match.type === 'training') && dateTimeValid && gymAddressValid;
     },
     async handleSave() {
       if (!this.validateForm()) {
@@ -279,12 +331,13 @@ export default {
 
       try {
         const numericValue = parseFloat(this.match.value.replace(/\./g, '').replace(',', '.'));
-        
         const body = {
           modality: this.match.modality,
-          value: numericValue,
+          type: this.match.type,
+          value: numericValue || undefined,
           dateTime: this.match.dateTime,
-          teamId: this.match.teamId,
+          teamHomeId: this.teamId,
+          teamAwayId: this.match.teamId || undefined
         };
 
         await axiosInstance.post('/matches', body);
@@ -292,15 +345,17 @@ export default {
         this.resetForm();
         this.$emit('close');
       } catch (error) {
+        console.log("🚀 ~ handleSave ~ error:", error)
         console.error(error);
         showErrorToast(error.message || 'Erro ao criar partida');
       }
-    },
-    resetForm() {
+    },    resetForm() {
       this.match = {
         modality: '',
+        type: '',
         value: '',
         dateTime: '',
+        gymAddress: '',
         teamId: null,
       };
       this.valueErrorText = 'Campo obrigatório';
