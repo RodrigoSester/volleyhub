@@ -16,8 +16,7 @@
 
     <ion-content class="ion-padding form-match__content">
       <ion-grid>
-        <ion-row>
-          <ion-col size="12">
+        <ion-row>          <ion-col size="12">
             <ion-label class="form-match__content__label">Tipo da partida:*</ion-label>
             <ion-select
               ref="inputType"
@@ -36,6 +35,22 @@
               <ion-select-option value="friendly_match">Amistoso</ion-select-option>
               <ion-select-option value="leisure">Lazer</ion-select-option>
             </ion-select>
+          </ion-col>
+
+          <ion-col size="12">
+            <ion-label class="form-match__content__label">Título da partida:*</ion-label>
+            <ion-input
+              ref="inputTitle"
+              v-model="match.title"
+              style="margin-top: 4px"
+              placeholder="Título da partida"
+              fill="outline"
+              :error-text="titleErrorText"
+              maxlength="50"
+              required
+              @ionBlur="markTouched('inputTitle')"
+              @input="handleTitleInput($event.target.value)"
+            />
           </ion-col>
 
           <ion-col size="12">
@@ -155,13 +170,14 @@ export default {
   data() {
     return {
       arrowBack,
-      checkmarkOutline,
-      teams: [],
+      checkmarkOutline,      teams: [],
       valueErrorText: 'Campo obrigatório',
       dateTimeErrorText: 'Campo obrigatório',
+      titleErrorText: 'Campo obrigatório',
       match: {
         modality: '',
         type: '',
+        title: '',
         value: '',
         dateTime: '',
         gymAddress: '',
@@ -213,7 +229,6 @@ export default {
       this.valueErrorText = '';
       return true;
     },
-    
     validateDateTime(dateTime) {
       if (!dateTime) {
         this.dateTimeErrorText = 'Campo obrigatório';
@@ -247,6 +262,21 @@ export default {
       return true;
     },
     
+    validateTitle(title) {
+      if (!title || title.trim() === '') {
+        this.titleErrorText = 'Campo obrigatório';
+        return false;
+      }
+      
+      if (title.length > 50) {
+        this.titleErrorText = 'Título deve ter no máximo 50 caracteres';
+        return false;
+      }
+      
+      this.titleErrorText = '';
+      return true;
+    },
+    
     handleValueInput(value) {
       const formattedValue = this.formatValue(value);
       this.match.value = formattedValue;
@@ -260,12 +290,24 @@ export default {
         inputEl.classList.add('ion-invalid');
       }
     },
-    
-    handleDateTimeInput(value) {
+      handleDateTimeInput(value) {
       this.match.dateTime = value;
       
       const isValid = this.validateDateTime(value);
       const inputEl = this.$refs.inputDateTime.$el;
+      
+      if (isValid) {
+        inputEl.classList.remove('ion-invalid');
+      } else {
+        inputEl.classList.add('ion-invalid');
+      }
+    },
+    
+    handleTitleInput(value) {
+      this.match.title = value;
+      
+      const isValid = this.validateTitle(value);
+      const inputEl = this.$refs.inputTitle.$el;
       
       if (isValid) {
         inputEl.classList.remove('ion-invalid');
@@ -291,6 +333,7 @@ export default {
     validateForm() {
       const modalityValid = !!this.match.modality;
       const typeValid = !!this.match.type;
+      const titleValid = this.validateTitle(this.match.title);
       const valueValid = this.validateValue(this.match.value);
       const dateTimeValid = this.validateDateTime(this.match.dateTime);
       const gymAddressValid = !!this.match.gymAddress;
@@ -304,6 +347,11 @@ export default {
       if (!typeValid) {
         this.markTouched('inputType');
         this.$refs.inputType.$el.classList.add('ion-invalid');
+      }
+      
+      if (!titleValid) {
+        this.markTouched('inputTitle');
+        this.$refs.inputTitle.$el.classList.add('ion-invalid');
       }
       
       if (!valueValid && this.match.type !== 'training') {
@@ -321,7 +369,7 @@ export default {
         this.$refs.inputGymAddress.$el.classList.add('ion-invalid');
       }
       
-      return modalityValid && typeValid && (valueValid || this.match.type === 'training') && dateTimeValid && gymAddressValid;
+      return modalityValid && typeValid && titleValid && (valueValid || this.match.type === 'training') && dateTimeValid && gymAddressValid;
     },
     async handleSave() {
       if (!this.validateForm()) {
@@ -330,12 +378,13 @@ export default {
       }
 
       try {
-        const numericValue = parseFloat(this.match.value.replace(/\./g, '').replace(',', '.'));
-        const body = {
+        const numericValue = parseFloat(this.match.value.replace(/\./g, '').replace(',', '.'));        const body = {
           modality: this.match.modality,
           type: this.match.type,
+          title: this.match.title,
           value: numericValue || undefined,
           dateTime: this.match.dateTime,
+          gymAddress: this.match.gymAddress,
           teamHomeId: this.teamId,
           teamAwayId: this.match.teamId || undefined
         };
@@ -353,6 +402,7 @@ export default {
       this.match = {
         modality: '',
         type: '',
+        title: '',
         value: '',
         dateTime: '',
         gymAddress: '',
@@ -360,6 +410,7 @@ export default {
       };
       this.valueErrorText = 'Campo obrigatório';
       this.dateTimeErrorText = 'Campo obrigatório';
+      this.titleErrorText = 'Campo obrigatório';
     },
   }
 }
