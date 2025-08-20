@@ -57,7 +57,12 @@
     </ion-content>
 
     <InvitePlayerModal :teamId="team.id" />
-    <RegisterMatch :open="isOpenRegisterMatch" :teamId="team.id" @close="isOpenRegisterMatch = false" />
+    <RegisterMatch 
+      :open="isOpenRegisterMatch" 
+      :teamId="team.id" 
+      :teamData="team"
+      @close="isOpenRegisterMatch = false" 
+    />
   </ion-modal>
 </template>
 

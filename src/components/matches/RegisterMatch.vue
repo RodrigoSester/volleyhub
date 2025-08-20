@@ -64,6 +64,7 @@
               aria-label="Modalidade"
               placeholder="Modalidade"
               error-text="Campo obrigatório"
+              :disabled="!!teamData?.modality"
               required
               @ionBlur="markTouched('inputModality')"
               @ionChange="handleInput('modality', $event.target.value)"
@@ -165,6 +166,10 @@ export default {
     teamId: {
       type: Number,
       default: null,
+    },
+    teamData: {
+      type: Object,
+      default: null,
     }
   },
   data() {
@@ -188,6 +193,9 @@ export default {
     open(newValue) {
       if (newValue) {
         this.fetchTeams();
+        if (this.teamData?.modality) {
+          this.match.modality = this.teamData.modality;
+        }
       }
     }
   },
@@ -384,7 +392,7 @@ export default {
           title: this.match.title,
           value: numericValue || undefined,
           dateTime: this.match.dateTime,
-          gymAddress: this.match.gymAddress,
+          location: this.match.gymAddress,
           teamHomeId: this.teamId,
           teamAwayId: this.match.teamId || undefined
         };
@@ -395,12 +403,12 @@ export default {
         this.$emit('close');
       } catch (error) {
         console.log("🚀 ~ handleSave ~ error:", error)
-        console.error(error);
         showErrorToast(error.message || 'Erro ao criar partida');
       }
-    },    resetForm() {
+    },
+    resetForm() {
       this.match = {
-        modality: '',
+        modality: this.teamData?.modality || '',
         type: '',
         title: '',
         value: '',
