@@ -19,8 +19,8 @@
             <ion-label class="teams-page__list__header__label">
               Time
             </ion-label>
-            <ion-label class="teams-page__list__header__label">
-              Modalidade
+            <ion-label class="teams-page__list__header__label" slot="end">
+              Ações
             </ion-label>
           </ion-item>
           <ion-item 
@@ -29,10 +29,14 @@
             :key="team.id"
           >
             <ion-label>
-              {{ team.name }}
-            </ion-label>
-            <ion-label>
-              {{ team.modality }}
+              <div class="teams-page__list__item__team">
+                <span>
+                  {{ team.name }}
+                </span>
+                <ion-label class="subtitle">
+                  {{ team.modality }}
+                </ion-label>
+              </div>
             </ion-label>
             <ion-button slot="end" id="popover-button" fill="clear" class="teams-page__list__item__button">
               <ion-icon :icon="ellipsisVertical" slot="icon-only" />
