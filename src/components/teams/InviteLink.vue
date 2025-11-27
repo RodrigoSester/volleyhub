@@ -1,5 +1,5 @@
 <template>
-  <ion-modal trigger="open-modal-use-link" class="block invite-link" :initial-breakpoint="1" :breakpoints="[0, 1]">
+  <ion-modal trigger="open-modal-use-link" class="block invite-link" :initial-breakpoint="1" :breakpoints="[0, 1]" @didDismiss="resetLink">
     <div class="invite-link__content ion-padding">
       <h2 class="invite-link__content__header">
         Link de Convite
@@ -60,6 +60,10 @@ export default {
       const pattern = /^\/teams\/invite\?expiration=\d+&teamId=[^&]+$/;
 
       return pattern.test(pathAndQuery);
+    },
+
+    resetLink() {
+      this.link = '';
     }
   }
 }

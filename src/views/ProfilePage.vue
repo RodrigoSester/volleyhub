@@ -6,20 +6,26 @@
       </ion-toolbar>
     </ion-header>
     <ion-content>
-      <ion-button @click="openMenu">Open Menu</ion-button>
+      <ion-button @click="signOut">Sign Out</ion-button>
     </ion-content>
   </ion-page>
 </template>
 
 <script>
 import { defineComponent } from 'vue';
+import { useRouter } from 'vue-router';
+import storageConfig from '../config/storage.config';
 
 export default defineComponent({
-  name: 'HomePage',
-  methods: {
-    openMenu() {
-      console.log('Open menu');
-    },
+  name: 'ProfilePage',
+  setup() {
+    const router = useRouter();
+    const signOut = async () => {
+      await storageConfig.remove('token');
+      await storageConfig.remove('refreshToken');
+      router.go('/login');
+    };
+    return { signOut };
   },
 });
 </script>

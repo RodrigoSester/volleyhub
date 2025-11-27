@@ -72,7 +72,7 @@
               ref="inputMonthlyFee"
               v-model="team.monthlyFee"
               style="margin-top: 4px"
-              placeholder="R$ 0,00"
+              placeholder="0,00"
               fill="outline"
               error-text="Campo obrigatório"
               required
@@ -149,6 +149,7 @@ export default defineComponent({
     getPropertyInputKey(key) {
       return key.charAt(0).toUpperCase() + key.slice(1)
     },
+
     openGallery () {
       Camera.getPhoto({
         quality: 90,
@@ -162,10 +163,31 @@ export default defineComponent({
         console.error(error);
       });
     },
+
     handleInput(key, value) {
       this.$refs[`input${this.getPropertyInputKey(key)}`].$el.classList.remove('ion-invalid');
+      if (key === 'monthlyFee') {
+      this.team[key] = this.formatValue(value);
+      } else {
       this.team[key] = value;
+      }
     },
+
+    formatValue(value) {
+      const numbers = value.replace(/\D/g, '');
+      
+      if (!numbers) return '';
+
+      const cents = parseInt(numbers);
+      
+      const formatted = (cents / 100).toLocaleString('pt-BR', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+      });
+      
+      return formatted;
+    },
+
     validateForm() {
       for (const teamProperty in this.team) {
         if (!this.team[teamProperty]) {

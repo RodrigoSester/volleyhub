@@ -35,7 +35,7 @@
       </ion-list>
       <ion-fab slot="fixed" vertical="bottom" horizontal="end" class="manage-team__content__button">
         <ion-fab-button>
-          <ion-icon :icon="arrowUp" />
+          <ion-icon :icon="add" />
         </ion-fab-button>
         <ion-fab-list side="top" class="manage-team__content__button__list">
           <button
@@ -67,7 +67,7 @@
 </template>
 
 <script>
-import { pencil, arrowBack, ellipsisVertical, checkmarkOutline, personAdd, basketball, arrowUp } from 'ionicons/icons';
+import { pencil, arrowBack, ellipsisVertical, checkmarkOutline, personAdd, basketball, add } from 'ionicons/icons';
 import { defineComponent } from 'vue';
 import { axiosInstance } from '../../config/axios.config';
 import moment from 'moment';
@@ -84,7 +84,7 @@ export default defineComponent({
   data() {
     return {
       pencil,
-      arrowUp,
+      add,
       arrowBack,
       personAdd,
       basketball,

@@ -16,7 +16,8 @@
 
     <ion-content class="ion-padding form-match__content">
       <ion-grid>
-        <ion-row>          <ion-col size="12">
+        <ion-row>
+          <ion-col size="12">
             <ion-label class="form-match__content__label">Tipo da partida:*</ion-label>
             <ion-select
               ref="inputType"
@@ -32,7 +33,7 @@
               @ionChange="handleInput('type', $event.target.value)"
             >
               <ion-select-option value="training">Treino</ion-select-option>
-              <ion-select-option value="friendly_match">Amistoso</ion-select-option>
+              <ion-select-option value="friendly">Amistoso</ion-select-option>
               <ion-select-option value="leisure">Lazer</ion-select-option>
             </ion-select>
           </ion-col>
@@ -92,7 +93,8 @@
                 R$
               </span>
             </ion-input>
-          </ion-col>          <ion-col size="12">
+          </ion-col>
+          <ion-col size="12">
             <ion-label class="form-match__content__label">Data e Horário:*</ion-label>
             <ion-input
               ref="inputDateTime"
@@ -391,8 +393,8 @@ export default {
           type: this.match.type,
           title: this.match.title,
           value: numericValue || undefined,
-          dateTime: this.match.dateTime,
-          location: this.match.gymAddress,
+          date: this.match.dateTime,
+          adress: this.match.gymAddress,
           teamHomeId: this.teamId,
           teamAwayId: this.match.teamId || undefined
         };

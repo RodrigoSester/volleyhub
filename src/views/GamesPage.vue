@@ -6,34 +6,57 @@
       </ion-toolbar>
     </ion-header>
     <ion-content>
-      <ion-list class="games-page__list" lines="full">
-        <ion-item class="games-page__list__header">
-          <ion-label class="games-page__list__header__label">
-            Partida
-          </ion-label>
-          <ion-label class="games-page__list__header__label" slot="end">
-            Status
-          </ion-label>
-        </ion-item>
-        <ion-item class="games-page__list__item" v-for="match in matches" :key="match.id">
-          <ion-label>
-            <div class="games-page__list__item__match">
-              <span>{{ match.title }}</span>
-              <ion-label class="subtitle">
-                {{ match.modality }} • {{ formatDate(match.date) }}
+      <ion-refresher slot="fixed" @ionRefresh="handleRefresh($event)">
+        <ion-refresher-content refreshing-spinner="bubbles" class="games-page__refresher" />
+      </ion-refresher>
+
+      <ion-grid v-if="loading" style="display: flex; align-items: center; justify-content: center; height: 100%;">
+        <ion-spinner style="height: 64px; width: 64px;" />
+      </ion-grid>
+      <div v-else-if="matches.length > 0 && !loading">
+        <ion-list class="games-page__list" lines="full">
+          <ion-item class="games-page__list__header">
+            <ion-label class="games-page__list__header__label">
+              Partida
+            </ion-label>
+            <ion-label class="games-page__list__header__label" slot="end">
+              Status
+            </ion-label>
+          </ion-item>
+          <ion-item class="games-page__list__item" v-for="match in matches" :key="match.id">
+            <ion-label>
+              <div class="games-page__list__item__match">
+                <span>{{ match.title }}</span>
+                <ion-label class="subtitle">
+                  {{ match.modality }} • {{ formatDate(match.date) }}
+                </ion-label>
+              </div>
+            </ion-label>
+            <ion-note slot="end">
+              <ion-chip :class="presenceClass(match.status)">
+                {{ match.status }}
+              </ion-chip>
+            </ion-note>
+          </ion-item>
+        </ion-list>
+      </div>
+      <ion-card v-else class="games-page__empty-card">
+        <ion-grid>
+          <ion-row>
+            <ion-col class="ion-text-center">
+              <ion-icon :icon="alertCircleOutline" style="font-size: 64px;" class="games-page__empty-card__title" />
+              <ion-label>
+                <ion-card-title class="games-page__empty-card__title">
+                  Ainda não há jogos!
+                </ion-card-title>
+                <ion-card-subtitle style="margin-top: 4px;" class="games-page__empty-card__subtitle">
+                  Seus próximos jogos aparecerão aqui
+                </ion-card-subtitle>
               </ion-label>
-            </div>
-          </ion-label>
-          <ion-note slot="end">
-            <ion-chip :class="presenceClass(match.presence)">
-              {{ match.presence }}
-            </ion-chip>
-          </ion-note>
-          <ion-button slot="end" fill="clear" class="games-page__list__item__button" @click="openActions(match)">
-            <ion-icon name="ellipsis-vertical" />
-          </ion-button>
-        </ion-item>
-      </ion-list>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-card>
       <ion-action-sheet
         :is-open="actionSheetOpen"
         :header="selectedMatch?.title"
@@ -46,6 +69,7 @@
 
 <script>
 import { defineComponent, ref, onMounted } from 'vue';
+import { alertCircleOutline } from 'ionicons/icons';
 import { axiosInstance } from '../config/axios.config';
 import { showToast } from '../helper/toast.helper';
 
@@ -73,11 +97,6 @@ export default defineComponent({
     onMounted(() => {
       fetchUserMatches();
     });
-
-    const openActions = (match) => {
-      selectedMatch.value = match;
-      actionSheetOpen.value = true;
-    };
 
     const acceptMatch = () => {
       if (selectedMatch.value) {
@@ -109,14 +128,18 @@ export default defineComponent({
       },
     ];
 
-    const presenceClass = (presence) => {
-      switch (presence) {
-        case 'Accepted':
-          return 'success';
-        case 'Refused':
-          return 'danger';
-        default:
-          return 'warning';
+    const presenceClass = (status) => {
+      switch (status) {
+      case 'confirmed':
+        return 'success';
+      case 'canceled':
+        return 'danger';
+      case 'pending':
+        return 'warning';
+      case 'refused':
+        return 'danger';
+      default:
+        return 'warning';
       }
     };
 
@@ -125,16 +148,25 @@ export default defineComponent({
       return date.toLocaleString();
     };
 
+    const handleRefresh = async (event) => {
+      await fetchUserMatches();
+      
+      if (event) {
+        event.detail.complete();
+      }
+    };
+
     return {
       matches,
       loading,
       actionSheetOpen,
       selectedMatch,
-      openActions,
       actionSheetButtons,
       presenceClass,
       formatDate,
       fetchUserMatches,
+      handleRefresh,
+      alertCircleOutline,
     };
   },
 });
@@ -142,6 +174,10 @@ export default defineComponent({
 
 <style scoped lang="scss">
 .games-page {
+  &__refresher {
+    color: var(--ion-background-color-800) !important;
+  }
+
   &__header {
     border-bottom-left-radius: 8px;
     border-bottom-right-radius: 8px;
@@ -199,6 +235,26 @@ export default defineComponent({
       &__button {
         color: var(--ion-text-color);
       }
+    }
+  }
+
+  &__empty-card {
+    --background: var(--ion-background-item-list);
+    border: 2px solid var(--ion-background-color-800);
+    border-radius: 8px;
+    height: 200px;
+    align-content: center;
+
+    &__title {
+      color: var(--ion-text-color);
+      font-size: 24px;
+      font-weight: 700;
+    }
+
+    &__subtitle {
+      color: var(--ion-text-color-600);
+      font-weight: 700;
+      font-size: 14px;
     }
   }
 }

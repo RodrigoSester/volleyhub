@@ -21,17 +21,21 @@
           </ion-card-header>
           <ion-card-content class="home__card__content ion-no-padding">
             <ion-list lines="full" class="ion-no-padding home__card__content__list">
-              <ion-item class="home__card__content__list__item ion-align-items-center ion-justify-content-between">
+              <ion-item
+                v-for="match in matches.slice(0, 3)"
+                :key="match.id"
+                class="home__card__content__list__item ion-align-items-center ion-justify-content-between"
+              >
                 <div>
                   <span>
-                    Amistoso Gamma
+                    {{ match.title }}
                   </span>
                   <ion-label class="subtitle">
-                    Masculino • 25/01
+                    {{ match.subtitle }}
                   </ion-label>
                 </div>
                 <ion-note slot="end">
-                  <ion-chip class="warning">Pendente</ion-chip>
+                  <ion-chip :class="statusChipClass(match.status)">{{ match.status }}</ion-chip>
                 </ion-note>
               </ion-item>
             </ion-list>
@@ -44,6 +48,9 @@
 
 <script>
 import { defineComponent } from 'vue';
+import { axiosInstance } from '../config/axios.config';
+import { ref } from 'vue';
+import { showToast } from '../helper/toast.helper';
 
 export default defineComponent({
   name: 'HomePage',
@@ -52,8 +59,50 @@ export default defineComponent({
       user: {
         name: 'Rodrigo',
       },
-    }
-  }
+    };
+  },
+  mounted() {
+    this.fetchUserMatches();
+  },
+  setup() {
+    const matches = ref([]);
+    const loading = ref(false);
+
+    const fetchUserMatches = async () => {
+      loading.value = true;
+      try {
+        const response = await axiosInstance.get('/user/matches');
+        matches.value = response.data.body || response.data;
+      } catch (error) {
+        showToast('Erro ao buscar partidas');
+        console.error('Error fetching matches:', error);
+      } finally {
+        loading.value = false;
+      }
+    };
+
+    const statusChipClass = (status) => {
+      switch (status) {
+      case 'confirmed':
+        return 'success';
+      case 'canceled':
+        return 'danger';
+      case 'pending':
+        return 'warning';
+      case 'refused':
+        return 'danger';
+      default:
+        return 'warning';
+      }
+    };
+
+    return {
+      matches,
+      loading,
+      fetchUserMatches,
+      statusChipClass,
+    };
+  },
 });
 </script>
 

@@ -23,21 +23,25 @@ const routes = [
       {
          meta: { auth: true },
          path: '/matches',
+          name: 'matches',
          component: () => import ('../views/GamesPage.vue'),
        },
-      // {
-      //   meta: { auth: true },
-      //   path: '/profile',
-      //   component: () => import ('../views/ProfilePage.vue')
-      // },
+      {
+        meta: { auth: true },
+        path: '/profile',
+        name: 'profile',
+        component: () => import ('../views/ProfilePage.vue')
+      },
     ]
   },
   {
     path: '/login',
+    name: 'login',
     component: () => import ('../views/LoginPage.vue')
   },
   {
     path: '/register',
+    name: 'register',
     component: () => import ('../views/RegisterPage.vue')
   }
 ]

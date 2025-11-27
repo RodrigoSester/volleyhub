@@ -11,7 +11,7 @@ const _requestHandler = async request => {
 };
 
 const _refreshToken = async () => {
-  const refreshToken = await storageConfig.get('refreshToken');
+  const refreshToken = await storageConfig.get('authorization');
   const response = await axiosInstance.post('/auth/refresh-token', { refreshToken });
   await setToken(response.data.body);
 }
@@ -63,9 +63,9 @@ const customAxios = () => {
 
 export const axiosInstance = customAxios();
 
-export const setToken = async ({ token, refreshToken }) => {
+export const setToken = async ({ token }) => {
   await storageConfig.set('authorization', token);
-  await storageConfig.set('refreshToken', refreshToken);
+  await storageConfig.set('refreshToken', token);
 };
 
 export const isAuthenticated = async () => {
