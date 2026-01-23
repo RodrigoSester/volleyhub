@@ -34,7 +34,7 @@
                   {{ team.name }}
                 </span>
                 <ion-label class="subtitle">
-                  {{ team.modality }}
+                  {{ formatModality(team.modality) }}
                 </ion-label>
               </div>
             </ion-label>
@@ -116,6 +116,7 @@ import { add, alertCircleOutline, trashBinOutline, ellipsisVertical, pencil, set
 
 import { axiosInstance } from '../config/axios.config';
 import { showToast } from '../helper/toast.helper';
+import { formatModality } from '../plugin';
 
 import ManageTeamModal from '../components/teams/Manage.vue';
 import RegisterTeamModal from '../components/teams/Form.vue';
@@ -148,6 +149,7 @@ export default defineComponent({
     this.fetchUserTeams();
   },
   methods: {
+    formatModality,
     openRegisterTeamModal(teamId = null) {
       this.$refs.registerTeamModal.open(teamId);
     },

@@ -28,9 +28,6 @@
               <ion-chip :class="player.isActive ? 'success' : 'inactive'">{{ player.isActive ? 'Ativo' : 'Inativo' }}</ion-chip>
             </ion-note>
           </ion-col>
-           <ion-button slot="end" class="manage-team__content__item__button">
-              <ion-icon slot="icon-only" :icon="ellipsisVertical" />
-           </ion-button>
         </ion-item>
       </ion-list>
       <ion-fab slot="fixed" vertical="bottom" horizontal="end" class="manage-team__content__button">

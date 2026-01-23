@@ -35,7 +35,7 @@
                   </ion-label>
                 </div>
                 <ion-note slot="end">
-                  <ion-chip :class="statusChipClass(match.status)">{{ match.status }}</ion-chip>
+                  <ion-chip :class="formatStatusClass(match.status)">{{ formatStatusLabel(match.status) }}</ion-chip>
                 </ion-note>
               </ion-item>
             </ion-list>
@@ -51,6 +51,7 @@ import { defineComponent } from 'vue';
 import { axiosInstance } from '../config/axios.config';
 import { ref } from 'vue';
 import { showToast } from '../helper/toast.helper';
+import { formatStatusClass, formatStatusLabel } from '../plugin';
 
 export default defineComponent({
   name: 'HomePage',
@@ -81,26 +82,12 @@ export default defineComponent({
       }
     };
 
-    const statusChipClass = (status) => {
-      switch (status) {
-      case 'confirmed':
-        return 'success';
-      case 'canceled':
-        return 'danger';
-      case 'pending':
-        return 'warning';
-      case 'refused':
-        return 'danger';
-      default:
-        return 'warning';
-      }
-    };
-
     return {
       matches,
       loading,
       fetchUserMatches,
-      statusChipClass,
+      formatStatusClass,
+      formatStatusLabel
     };
   },
 });

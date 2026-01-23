@@ -28,13 +28,13 @@
               <div class="games-page__list__item__match">
                 <span>{{ match.title }}</span>
                 <ion-label class="subtitle">
-                  {{ match.modality }} • {{ formatDate(match.date) }}
+                  {{ formatModality(match.modality) }} • {{ formatDate(match.date) }}
                 </ion-label>
               </div>
             </ion-label>
             <ion-note slot="end">
-              <ion-chip :class="presenceClass(match.status)">
-                {{ match.status }}
+              <ion-chip :class="formatStatusClass(match.status)">
+                {{ formatStatusLabel(match.status) }}
               </ion-chip>
             </ion-note>
           </ion-item>
@@ -72,6 +72,7 @@ import { defineComponent, ref, onMounted } from 'vue';
 import { alertCircleOutline } from 'ionicons/icons';
 import { axiosInstance } from '../config/axios.config';
 import { showToast } from '../helper/toast.helper';
+import { formatDate, formatStatusClass, formatStatusLabel, formatModality } from '../plugin';
 
 export default defineComponent({
   name: 'GamesPage',
@@ -128,26 +129,6 @@ export default defineComponent({
       },
     ];
 
-    const presenceClass = (status) => {
-      switch (status) {
-      case 'confirmed':
-        return 'success';
-      case 'canceled':
-        return 'danger';
-      case 'pending':
-        return 'warning';
-      case 'refused':
-        return 'danger';
-      default:
-        return 'warning';
-      }
-    };
-
-    const formatDate = (dateStr) => {
-      const date = new Date(dateStr);
-      return date.toLocaleString();
-    };
-
     const handleRefresh = async (event) => {
       await fetchUserMatches();
       
@@ -162,8 +143,10 @@ export default defineComponent({
       actionSheetOpen,
       selectedMatch,
       actionSheetButtons,
-      presenceClass,
+      formatStatusClass,
+      formatStatusLabel,
       formatDate,
+      formatModality,
       fetchUserMatches,
       handleRefresh,
       alertCircleOutline,
